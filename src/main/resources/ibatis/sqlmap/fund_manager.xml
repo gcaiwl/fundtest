@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FundManager">
+
+	<resultMap id="BeanMap" class="com.longxi.data.obj.FundManagerDO">
+		<result column="id" property="id" jdbcType="BIGINT" />
+		<result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		<result column="code" property="code" jdbcType="CHAR" />
+		<result column="manager" property="manager" jdbcType="VARCHAR" />
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="redound" property="redound" jdbcType="DECIMAL" />
+	</resultMap>
+	
+	<sql id="SENTENCE_FUND_MANAGER">
+		id,gmt_create,gmt_modified,code,manager,start_time,end_time,redound		
+	</sql>
+	
+	
+	<sql id="SENTENCE_FUND_MANAGER_QUERY">
+		<dynamic prepend="WHERE " >
+			<isNotNull prepend="AND " property="id">
+				id=#id:BIGINT#
+			</isNotNull>
+			<isNotNull prepend="AND " property="gmtCreate">
+				gmt_create=#gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="gmtModified">
+				gmt_modified=#gmtModified:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="code">
+				code=#code:CHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="manager">
+				manager=#manager:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="startTime">
+				start_time=#startTime:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="endTime">
+				end_time=#endTime:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="redound">
+				redound=#redound:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- fund_manager-表sql语句开始++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	
+	<!-- 查询单条记录的sql语句  -->
+	<select id="FundManagerDAO.queryFundManager" resultMap="BeanMap"
+		parameterClass="java.util.Map">
+		SELECT
+		<include refid="SENTENCE_FUND_MANAGER" />
+		FROM
+		fund_manager
+		<dynamic prepend="WHERE ">
+			<isNotNull prepend="AND " property="id">
+					id=#id:BIGINT#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<!-- 通用的sqlmap查询语句，可返回多条记录，可接受order by及limit语句  -->
+	<select id="FundManagerDAO.queryFundManagerByPage" resultMap="BeanMap" parameterClass="java.util.Map">
+        SELECT
+        	<include refid="SENTENCE_FUND_MANAGER"/>
+        FROM
+        	fund_manager 
+    		<include refid="SENTENCE_FUND_MANAGER_QUERY"/>
+        <isNotEmpty prepend="order by " property="_order">
+		$_order:METADATA$
+		</isNotEmpty>
+		<isNotEmpty prepend="limit " property="_limit">
+		 #_limit.start#,#_limit.pageSize#
+		</isNotEmpty>
+    </select>
+    
+    <!-- 配合分页使用的count语句,共用同一套查询条件  -->
+    <select id="FundManagerDAO.countFundManager" resultClass="int" parameterClass="java.util.Map">
+		SELECT  
+           count(1)
+      	FROM
+			 fund_manager 
+    	<include refid="SENTENCE_FUND_MANAGER_QUERY"/>
+	</select>
+	
+	<!-- 根据主键更新单条记录  -->
+	<update id="FundManagerDAO.updateFundManager" parameterClass="com.longxi.data.obj.FundManagerDO">
+		 UPDATE fund_manager  set gmt_modified=now() 
+		 <isNotNull prepend="," property="id">
+			id=#id:BIGINT#
+		 </isNotNull>
+		 <isNotNull prepend="," property="gmtCreate">
+			gmt_create=#gmtCreate:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			code=#code:CHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="manager">
+			manager=#manager:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="startTime">
+			start_time=#startTime:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="endTime">
+			end_time=#endTime:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="redound">
+			redound=#redound:DECIMAL#
+		 </isNotNull>
+		WHERE id=#id:BIGINT# 		
+	</update>
+	
+	<!-- 根据DO插入单条记录  -->
+	<insert id="FundManagerDAO.insertFundManager" parameterClass="com.longxi.data.obj.FundManagerDO">
+		INSERT INTO fund_manager (gmt_create,gmt_modified
+		 <isNotNull prepend="," property="id">
+			id
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			code
+		 </isNotNull>
+		 <isNotNull prepend="," property="manager">
+			manager
+		 </isNotNull>
+		 <isNotNull prepend="," property="startTime">
+			start_time
+		 </isNotNull>
+		 <isNotNull prepend="," property="endTime">
+			end_time
+		 </isNotNull>
+		 <isNotNull prepend="," property="redound">
+			redound
+		 </isNotNull>
+	      )
+	   VALUES
+	      ( now(),now()
+		 <isNotNull prepend="," property="id">
+			#id:BIGINT#
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			#code:CHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="manager">
+			#manager:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="startTime">
+			#startTime:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="endTime">
+			#endTime:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="redound">
+			#redound:DECIMAL#
+		 </isNotNull>
+	      )
+		<selectKey resultClass="long" keyProperty="id">
+			select last_insert_id() as id
+		</selectKey>
+	</insert>
+	
+	<!-- fund_manager-表sql语句结束========================================================= -->
+</sqlMap>

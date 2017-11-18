@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Logback Configuration.  -->
+<configuration debug="false">
+    <!-- 控制台输出配置 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100} - %msg %n</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 文件输出配置 -->
+    <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/Users/longxi.cwl/Local/temp/fund/logs/fund.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <maxHistory>30</maxHistory>
+            <fileNamePattern>/Users/longxi.cwl/Local/temp/fund/logs/fund.log.%d{yyyyMMdd}</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <Pattern><![CDATA[%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100} - %msg %n]]></Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- loger根节点 -->
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="LOGFILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

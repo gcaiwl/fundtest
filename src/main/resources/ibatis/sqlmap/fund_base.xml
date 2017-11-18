@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FundBase">
+
+	<resultMap id="BeanMap" class="com.longxi.data.obj.FundBaseDO">
+		<result column="id" property="id" jdbcType="BIGINT" />
+		<result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		<result column="code" property="code" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="company" property="company" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="scale" property="scale" jdbcType="DECIMAL" />
+		<result column="share" property="share" jdbcType="DECIMAL" />
+		<result column="issue_time" property="issueTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="fee" property="fee" jdbcType="DECIMAL" />
+		<result column="quota" property="quota" jdbcType="INTEGER" />
+		<result column="establish_time" property="establishTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="SENTENCE_FUND_BASE">
+		id,gmt_create,gmt_modified,code,name,company,type,scale,share,issue_time,status,fee,quota,establish_time		
+	</sql>
+	
+	
+	<sql id="SENTENCE_FUND_BASE_QUERY">
+		<dynamic prepend="WHERE " >
+			<isNotNull prepend="AND " property="id">
+				id=#id:BIGINT#
+			</isNotNull>
+			<isNotNull prepend="AND " property="gmtCreate">
+				gmt_create=#gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="gmtModified">
+				gmt_modified=#gmtModified:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="code">
+				code=#code:CHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="name">
+				name=#name:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="company">
+				company=#company:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="type">
+				type=#type:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="scale">
+				scale=#scale:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="share">
+				share=#share:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="issueTime">
+				issue_time=#issueTime:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="status">
+				status=#status:TINYINT#
+			</isNotNull>
+			<isNotNull prepend="AND " property="fee">
+				fee=#fee:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="quota">
+				quota=#quota:INTEGER#
+			</isNotNull>
+			<isNotNull prepend="AND " property="establishTime">
+				establish_time=#establishTime:TIMESTAMP#
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- fund_base-表sql语句开始++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	
+	<!-- 查询单条记录的sql语句  -->
+	<select id="FundBaseDAO.queryFundBase" resultMap="BeanMap"
+		parameterClass="java.util.Map">
+		SELECT
+		<include refid="SENTENCE_FUND_BASE" />
+		FROM
+		fund_base
+		<dynamic prepend="WHERE ">
+			<isNotNull prepend="AND " property="id">
+					id=#id:BIGINT#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<!-- 通用的sqlmap查询语句，可返回多条记录，可接受order by及limit语句  -->
+	<select id="FundBaseDAO.queryFundBaseByPage" resultMap="BeanMap" parameterClass="java.util.Map">
+        SELECT
+        	<include refid="SENTENCE_FUND_BASE"/>
+        FROM
+        	fund_base 
+    		<include refid="SENTENCE_FUND_BASE_QUERY"/>
+        <isNotEmpty prepend="order by " property="_order">
+		$_order:METADATA$
+		</isNotEmpty>
+		<isNotEmpty prepend="limit " property="_limit">
+		 #_limit.start#,#_limit.pageSize#
+		</isNotEmpty>
+    </select>
+    
+    <!-- 配合分页使用的count语句,共用同一套查询条件  -->
+    <select id="FundBaseDAO.countFundBase" resultClass="int" parameterClass="java.util.Map">
+		SELECT  
+           count(1)
+      	FROM
+			 fund_base 
+    	<include refid="SENTENCE_FUND_BASE_QUERY"/>
+	</select>
+	
+	<!-- 根据主键更新单条记录  -->
+	<update id="FundBaseDAO.updateFundBase" parameterClass="com.longxi.data.obj.FundBaseDO">
+		 UPDATE fund_base  set gmt_modified=now() 
+		 <isNotNull prepend="," property="id">
+			id=#id:BIGINT#
+		 </isNotNull>
+		 <isNotNull prepend="," property="gmtCreate">
+			gmt_create=#gmtCreate:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			code=#code:CHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="name">
+			name=#name:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="company">
+			company=#company:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="type">
+			type=#type:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="scale">
+			scale=#scale:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="share">
+			share=#share:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="issueTime">
+			issue_time=#issueTime:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="status">
+			status=#status:TINYINT#
+		 </isNotNull>
+		 <isNotNull prepend="," property="fee">
+			fee=#fee:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="quota">
+			quota=#quota:INTEGER#
+		 </isNotNull>
+		 <isNotNull prepend="," property="establishTime">
+			establish_time=#establishTime:TIMESTAMP#
+		 </isNotNull>
+		WHERE id=#id:BIGINT# 		
+	</update>
+	
+	<!-- 根据DO插入单条记录  -->
+	<insert id="FundBaseDAO.insertFundBase" parameterClass="com.longxi.data.obj.FundBaseDO">
+		INSERT INTO fund_base (gmt_create,gmt_modified
+		 <isNotNull prepend="," property="id">
+			id
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			code
+		 </isNotNull>
+		 <isNotNull prepend="," property="name">
+			name
+		 </isNotNull>
+		 <isNotNull prepend="," property="company">
+			company
+		 </isNotNull>
+		 <isNotNull prepend="," property="type">
+			type
+		 </isNotNull>
+		 <isNotNull prepend="," property="scale">
+			scale
+		 </isNotNull>
+		 <isNotNull prepend="," property="share">
+			share
+		 </isNotNull>
+		 <isNotNull prepend="," property="issueTime">
+			issue_time
+		 </isNotNull>
+		 <isNotNull prepend="," property="status">
+			status
+		 </isNotNull>
+		 <isNotNull prepend="," property="fee">
+			fee
+		 </isNotNull>
+		 <isNotNull prepend="," property="quota">
+			quota
+		 </isNotNull>
+		 <isNotNull prepend="," property="establishTime">
+			establish_time
+		 </isNotNull>
+	      )
+	   VALUES
+	      ( now(),now()
+		 <isNotNull prepend="," property="id">
+			#id:BIGINT#
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			#code:CHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="name">
+			#name:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="company">
+			#company:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="type">
+			#type:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="scale">
+			#scale:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="share">
+			#share:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="issueTime">
+			#issueTime:TIMESTAMP#
+		 </isNotNull>
+		 <isNotNull prepend="," property="status">
+			#status:TINYINT#
+		 </isNotNull>
+		 <isNotNull prepend="," property="fee">
+			#fee:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="quota">
+			#quota:INTEGER#
+		 </isNotNull>
+		 <isNotNull prepend="," property="establishTime">
+			#establishTime:TIMESTAMP#
+		 </isNotNull>
+	      )
+		<selectKey resultClass="long" keyProperty="id">
+			select last_insert_id() as id
+		</selectKey>
+	</insert>
+	
+	<!-- fund_base-表sql语句结束========================================================= -->
+</sqlMap>

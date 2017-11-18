@@ -1,0 +1,42 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.metadata
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+
+### OTHER ###
+GPATH
+GSYMS
+GRTAGS
+GTAGS
+gtags.files
+/tags
+.DS_Store
+*.swp
+.svn
+target/
+RemoteSystemsTempFiles
+.sass-cache
+logs/
+tree.txt
+*.log
+*.properties
