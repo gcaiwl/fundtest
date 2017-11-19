@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+    <!-- dao bean -->
+    <bean name="fundBaseDAO" class="com.longxi.data.dao.impl.FundBaseDAOImpl"/>
+    <bean name="fundBondPositionDAO" class="com.longxi.data.dao.impl.FundBondPositionDAOImpl"/>
+    <bean name="fundConfigDAO" class="com.longxi.data.dao.impl.FundConfigDAOImpl"/>
+    <bean name="fundFeatureDAO" class="com.longxi.data.dao.impl.FundFeatureDAOImpl"/>
+    <bean name="fundHolderDAO" class="com.longxi.data.dao.impl.FundHolderDAOImpl"/>
+    <bean name="fundIndustryDAO" class="com.longxi.data.dao.impl.FundIndustryDAOImpl"/>
+    <bean name="fundManagerDAO" class="com.longxi.data.dao.impl.FundManagerDAOImpl"/>
+    <bean name="fundScaleDAO" class="com.longxi.data.dao.impl.FundScaleDAOImpl"/>
+    <bean name="fundSharesPositionDAO" class="com.longxi.data.dao.impl.FundSharesPositionDAOImpl"/>
+    <bean name="fundTurnoverDAO" class="com.longxi.data.dao.impl.FundTurnoverDAOImpl"/>
+    <bean name="fundValueDAO" class="com.longxi.data.dao.impl.FundValueDAOImpl"/>
+
+    <!-- service bean -->
+    <bean name="fundBaseService" class="com.longxi.data.service.FundBaseService"/>
+    <bean name="fundDetailService" class="com.longxi.data.service.FundDetailService"/>
+    <bean name="fundListService" class="com.longxi.data.service.FundListService"/>
+    <bean name="fundValueService" class="com.longxi.data.service.FundValueService"/>
+</beans>

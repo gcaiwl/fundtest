@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
+import com.longxi.data.obj.Result;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,18 +19,21 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author longxi.cwl
  * @date 2017/11/04
  */
 public class HttpUtils {
+    private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 
     /**
      * @param url
      * @return
      */
-    public static String get(String url) {
+    public static Result<String> get(String url) {
         return get(url, "utf-8");
     }
 
@@ -35,7 +42,7 @@ public class HttpUtils {
      * @param params
      * @return
      */
-    public static String post(String url, Map<String, String> params) {
+    public static Result<String> post(String url, Map<String, String> params) {
         return post(url, params, "utf-8");
     }
 
@@ -44,15 +51,18 @@ public class HttpUtils {
      * @param encode
      * @return
      */
-    public static String get(String url, String encode) {
-        String result = null;
+    public static Result<String> get(String url, String encode) {
+        Result<String> result = new Result<String>();
         CloseableHttpClient httpClient = createHttpClient();
         try {
             HttpGet httpGet = new HttpGet(url);
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            result = resolveResponse(response, encode);
+
+            result.setValue(resolveResponse(response, encode));
+            result.setSuccess(response.getStatusLine().getStatusCode() < HttpStatus.SC_BAD_REQUEST);
+            result.setErrCode(String.valueOf(response.getStatusLine().getStatusCode()));
         } catch (Exception e) {
-            System.out.println(url + " get " + e.getMessage());
+            logger.error(url + " get request exception ", e);
         } finally {
             closeHttpClient(httpClient, url);
         }
@@ -65,8 +75,8 @@ public class HttpUtils {
      * @param encode
      * @return
      */
-    public static String post(String url, Map<String, String> param, String encode) {
-        String result = null;
+    public static Result<String> post(String url, Map<String, String> param, String encode) {
+        Result<String> result = new Result<String>();
         CloseableHttpClient httpClient = createHttpClient();
         try {
             HttpPost httpPost = new HttpPost(url);
@@ -78,9 +88,12 @@ public class HttpUtils {
             }
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
             CloseableHttpResponse response = httpClient.execute(httpPost);
-            result = resolveResponse(response, encode);
+
+            result.setValue(resolveResponse(response, encode));
+            result.setSuccess(response.getStatusLine().getStatusCode() < HttpStatus.SC_BAD_REQUEST);
+            result.setErrCode(String.valueOf(response.getStatusLine().getStatusCode()));
         } catch (Exception e) {
-            System.out.println(url + " post " + e.getMessage());
+            logger.error(url + " " + JSONObject.toJSONString(param) + " post request exception ", e);
         } finally {
             closeHttpClient(httpClient, url);
         }

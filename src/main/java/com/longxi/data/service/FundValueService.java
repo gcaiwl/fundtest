@@ -1,5 +1,6 @@
 package com.longxi.data.service;
 
+import com.longxi.data.obj.Result;
 import com.longxi.data.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,8 +10,8 @@ import org.slf4j.LoggerFactory;
  * @author longxi.cwl
  * @date 2017/11/14
  */
-public class ValueService extends AbstractService {
-    private static Logger logger = LoggerFactory.getLogger(ValueService.class);
+public class FundValueService extends FundService {
+    private static Logger logger = LoggerFactory.getLogger(FundValueService.class);
 
     /**
      * @param code
@@ -22,11 +23,11 @@ public class ValueService extends AbstractService {
             return null;
         }
 
-        String response = HttpUtils.get(getFundValueUrl(code));
-        if (StringUtils.isBlank(response)) {
+        Result<String> response = HttpUtils.get(getFundValueUrl(code));
+        if (StringUtils.isBlank(response.getValue())) {
             logger.error("queryFundValue is empty");
             return null;
         }
-        return response;
+        return response.getValue();
     }
 }

@@ -1,13 +1,9 @@
 package com.longxi.data.obj;
 
-import java.io.Serializable;
-
 /**
- * Created by hanyou.hww on 2016/3/12.
+ * @param <T>
  */
-public class Result<T> implements Serializable {
-    private static final long serialVersionUID = 7403416560805213485L;
-
+public class Result<T> extends BaseDO {
     /**
      *
      */
@@ -15,15 +11,15 @@ public class Result<T> implements Serializable {
     /**
      *
      */
-    private String errorCode;
+    private String errMsg;
     /**
      *
      */
-    private String errorInfo;
+    private String errCode;
     /**
      *
      */
-    private T resultData;
+    private T value;
 
     public boolean isSuccess() {
         return success;
@@ -33,27 +29,30 @@ public class Result<T> implements Serializable {
         this.success = success;
     }
 
-    public String getErrorCode() {
-        return errorCode;
+    public String getErrMsg() {
+        if (this.success && null == errMsg) {
+            return "success";
+        }
+        return errMsg;
     }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
     }
 
-    public String getErrorInfo() {
-        return errorInfo;
+    public T getValue() {
+        return value;
     }
 
-    public void setErrorInfo(String errorInfo) {
-        this.errorInfo = errorInfo;
+    public void setValue(T value) {
+        this.value = value;
     }
 
-    public T getResultData() {
-        return resultData;
+    public String getErrCode() {
+        return errCode;
     }
 
-    public void setResultData(T resultData) {
-        this.resultData = resultData;
+    public void setErrCode(String errCode) {
+        this.errCode = errCode;
     }
 }

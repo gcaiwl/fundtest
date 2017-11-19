@@ -10,12 +10,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.longxi.data.dao.FundTurnoverDAO;
 import com.longxi.data.dao.impl.FundTurnoverDAOImpl;
 import com.longxi.data.obj.FundTurnoverDO;
+import com.longxi.data.service.FundBaseService;
 import com.longxi.data.utils.HttpUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author longxi.cwl
@@ -62,10 +64,16 @@ public class FundTest {
         //fundTurnoverDO.setCode("123");
         //fundTurnoverDO.setTurnRate(new BigDecimal(123.61));
         //
-        FundTurnoverDAOImpl fundTurnoverDAO = new FundTurnoverDAOImpl();
-        //fundTurnoverDAO.insertFundTurnover(fundTurnoverDO);
+        //FundTurnoverDAOImpl fundTurnoverDAO = new FundTurnoverDAOImpl();
+        ////fundTurnoverDAO.insertFundTurnover(fundTurnoverDO);
+        //
+        //FundTurnoverDO fundTurnoverDO = fundTurnoverDAO.queryFundTurnoverById(1L);
+        //logger.error(JSONObject.toJSONString(fundTurnoverDO));
 
-        FundTurnoverDO fundTurnoverDO = fundTurnoverDAO.queryFundTurnoverById(1L);
-        logger.error(JSONObject.toJSONString(fundTurnoverDO));
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-fund.xml");
+        applicationContext.start();
+        logger.info("context is start... ");
+        FundBaseService fundBaseService = (FundBaseService)applicationContext.getBean("fundBaseService");
+        fundBaseService.insertOrUpdate("169101");
     }
 }

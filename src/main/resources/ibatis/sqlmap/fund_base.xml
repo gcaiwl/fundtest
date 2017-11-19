@@ -80,11 +80,7 @@
 		<include refid="SENTENCE_FUND_BASE" />
 		FROM
 		fund_base
-		<dynamic prepend="WHERE ">
-			<isNotNull prepend="AND " property="id">
-					id=#id:BIGINT#
-			</isNotNull>
-		</dynamic>
+		<include refid="SENTENCE_FUND_BASE_QUERY"/>
 	</select>
 	
 	<!-- 通用的sqlmap查询语句，可返回多条记录，可接受order by及limit语句  -->
@@ -113,13 +109,7 @@
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundBaseDAO.updateFundBase" parameterClass="com.longxi.data.obj.FundBaseDO">
-		 UPDATE fund_base  set gmt_modified=now() 
-		 <isNotNull prepend="," property="id">
-			id=#id:BIGINT#
-		 </isNotNull>
-		 <isNotNull prepend="," property="gmtCreate">
-			gmt_create=#gmtCreate:TIMESTAMP#
-		 </isNotNull>
+		 UPDATE fund_base  set gmt_modified=now()
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
 		 </isNotNull>

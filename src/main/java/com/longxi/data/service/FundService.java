@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
  * @author longxi.cwl
  * @date 2017/11/15
  */
-public class AbstractService {
-    private static Logger logger = LoggerFactory.getLogger(AbstractService.class);
+public class FundService {
+    private static Logger logger = LoggerFactory.getLogger(FundService.class);
     /**
      *
      */
@@ -98,6 +98,22 @@ public class AbstractService {
             value = "0";
         }
         value = value.trim().replaceAll("(.*)\\D[元|份|%].*", "$1");
+
+        BigDecimal bigDecimal = new BigDecimal(value);
+        bigDecimal.setScale(scale);
+        return bigDecimal;
+    }
+
+    /**
+     * @param value
+     * @param scale
+     * @return
+     */
+    protected BigDecimal getDoublePercent(String value, int scale) {
+        if (StringUtils.isBlank(value)) {
+            value = "0";
+        }
+        value = value.trim().replaceAll("(\\d*)%", "$1");
 
         BigDecimal bigDecimal = new BigDecimal(value);
         bigDecimal.setScale(scale);

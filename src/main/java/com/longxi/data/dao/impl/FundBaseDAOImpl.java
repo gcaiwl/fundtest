@@ -111,4 +111,18 @@ public class FundBaseDAOImpl extends SqlMapBaseDAO implements FundBaseDAO {
         return params;
     }
 
+    @Override
+    public FundBaseDO queryFundBaseByCode(String code) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("code", code);
+        List<FundBaseDO> list = queryFundBase(params);
+        if (list == null || list.isEmpty()) {
+            return null;
+        } else if (list.size() != 1) {
+            String errMsg = "queryFundBaseByCode return too many records,the param=" + params;
+            logger.error(errMsg);
+            throw new RuntimeException(errMsg);
+        }
+        return list.get(0);
+    }
 }

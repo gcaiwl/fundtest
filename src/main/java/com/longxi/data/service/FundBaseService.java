@@ -1,6 +1,11 @@
 package com.longxi.data.service;
 
+import javax.annotation.Resource;
+
+import com.longxi.data.dao.FundBaseDAO;
+import com.longxi.data.dao.impl.FundBaseDAOImpl;
 import com.longxi.data.obj.FundBaseDO;
+import com.longxi.data.obj.Result;
 import com.longxi.data.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -13,10 +18,47 @@ import org.slf4j.LoggerFactory;
  * @author longxi.cwl
  * @date 2017/11/15
  */
-public class FundBaseService extends AbstractService {
+public class FundBaseService extends FundService {
     private static Logger logger = LoggerFactory.getLogger(FundBaseService.class);
 
-    private static String FUND_BASE_URL = "http://service.eastmoney.com/f10/jbgk_%s.html";
+    private static String FUND_BASE_URL = "http://fund.eastmoney.com/f10/jbgk_%s.html";
+
+    @Resource
+    private FundBaseDAO fundBaseDAO;
+
+    /**
+     * @param code
+     */
+    public void insertOrUpdate(String code) {
+        FundBaseDO instance = getFundBase(code);
+        if (null != instance) {
+            FundBaseDO fundBaseDO = fundBaseDAO.queryFundBaseByCode(instance.getCode());
+            if (null != fundBaseDO) {
+                instance.setId(fundBaseDO.getId());
+                fundBaseDAO.updateFundBase(instance);
+            } else {
+                fundBaseDAO.insertFundBase(instance);
+            }
+        }
+    }
+
+    /**
+     * @param instance
+     */
+    public void insertOrUpdate(FundBaseDO instance) {
+        if (null == instance) {
+            logger.error("fundBaseDO is null");
+            return;
+        }
+
+        FundBaseDAOImpl fundBaseDAO = new FundBaseDAOImpl();
+        FundBaseDO fundBaseDO = fundBaseDAO.queryFundBaseByCode(instance.getCode());
+        if (null != fundBaseDO) {
+            fundBaseDAO.updateFundBase(instance);
+        } else {
+            fundBaseDAO.insertFundBase(instance);
+        }
+    }
 
     /**
      * @param code
@@ -29,14 +71,16 @@ public class FundBaseService extends AbstractService {
         }
 
         String url = getFundBaseUrl(code);
-        String response = HttpUtils.get(url);
-        if (StringUtils.isBlank(response)) {
-            logger.error(url + " resposne is empty");
+        logger.info(code + " fundbase url is " + url);
+
+        Result<String> response = HttpUtils.get(url);
+        if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
+            logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
         }
 
         FundBaseDO fundBase = null;
-        Document doc = Jsoup.parse(response);
+        Document doc = Jsoup.parse(response.getValue());
         if (null != doc) {
             fundBase = new FundBaseDO();
             Elements base = doc.select("table[class='info w790'] td");
@@ -50,10 +94,10 @@ public class FundBaseService extends AbstractService {
             fundBase.setCompany(getString(base.get(10).text()));
 
             Elements fee = doc.select("div[class='bs_jz'] b");
-            fundBase.setFee(getDoubleUnit(fee.get(2).text(), 2));
+            fundBase.setFee(getDoublePercent(fee.get(2).text(), 2));
 
             Elements status = doc.select("div[class='bs_jz'] span");
-            if (status.get(9).text().contains("span")) {
+            if (status.get(9).outerHtml().contains("span")) {
                 fundBase.setStatus(getStatus(status.get(7).text(), status.get(10).text()));
                 fundBase.setQuota(getQutoa(status.get(9).text()));
             } else {
@@ -104,5 +148,13 @@ public class FundBaseService extends AbstractService {
             value = "0";
         }
         return Integer.parseInt(value.trim().replaceAll("\\D*(\\d*)\\D*", "$1"));
+    }
+
+    public FundBaseDAO getFundBaseDAO() {
+        return fundBaseDAO;
+    }
+
+    public void setFundBaseDAO(FundBaseDAO fundBaseDAO) {
+        this.fundBaseDAO = fundBaseDAO;
     }
 }
