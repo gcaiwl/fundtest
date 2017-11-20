@@ -113,4 +113,19 @@ public class FundFeatureDAOImpl extends SqlMapBaseDAO implements FundFeatureDAO 
 		return params;
 	}
 
+	@Override
+	public FundFeatureDO queryFundFeatureByFeature(String code, String feature) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("feature", feature);
+		List<FundFeatureDO> list = queryFundFeature(params);
+		if(list == null || list.isEmpty()){
+			return null;
+		}else if(list.size() != 1){
+			String errMsg = "queryFundFeatureByFeature return too many records,the param="+params;
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+		return list.get(0);
+	}
 }

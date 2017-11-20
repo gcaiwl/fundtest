@@ -113,4 +113,19 @@ public class FundManagerDAOImpl extends SqlMapBaseDAO implements FundManagerDAO 
 		return params;
 	}
 
+	@Override
+	public FundManagerDO queryFundManagerByManager(String code, String manager) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("manager", manager);
+		List<FundManagerDO> list = queryFundManager(params);
+		if(list == null || list.isEmpty()){
+			return null;
+		}else if(list.size() != 1){
+			String errMsg = "queryFundManagerByManager return too many records,the param="+params;
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+		return list.get(0);
+	}
 }

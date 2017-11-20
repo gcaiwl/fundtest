@@ -91,7 +91,7 @@
         	fund_base 
     		<include refid="SENTENCE_FUND_BASE_QUERY"/>
         <isNotEmpty prepend="order by " property="_order">
-		$_order:METADATA$
+		$_order$
 		</isNotEmpty>
 		<isNotEmpty prepend="limit " property="_limit">
 		 #_limit.start#,#_limit.pageSize#

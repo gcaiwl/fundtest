@@ -60,11 +60,7 @@
 		<include refid="SENTENCE_FUND_SCALE" />
 		FROM
 		fund_scale
-		<dynamic prepend="WHERE ">
-			<isNotNull prepend="AND " property="id">
-					id=#id:BIGINT#
-			</isNotNull>
-		</dynamic>
+		<include refid="SENTENCE_FUND_SCALE_QUERY"/>
 	</select>
 	
 	<!-- 通用的sqlmap查询语句，可返回多条记录，可接受order by及limit语句  -->
@@ -75,7 +71,7 @@
         	fund_scale 
     		<include refid="SENTENCE_FUND_SCALE_QUERY"/>
         <isNotEmpty prepend="order by " property="_order">
-		$_order:METADATA$
+		$_order$
 		</isNotEmpty>
 		<isNotEmpty prepend="limit " property="_limit">
 		 #_limit.start#,#_limit.pageSize#
@@ -94,12 +90,6 @@
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundScaleDAO.updateFundScale" parameterClass="com.longxi.data.obj.FundScaleDO">
 		 UPDATE fund_scale  set gmt_modified=now() 
-		 <isNotNull prepend="," property="id">
-			id=#id:BIGINT#
-		 </isNotNull>
-		 <isNotNull prepend="," property="gmtCreate">
-			gmt_create=#gmtCreate:TIMESTAMP#
-		 </isNotNull>
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
 		 </isNotNull>

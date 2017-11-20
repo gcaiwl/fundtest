@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
  * @author longxi.cwl
  * @date 2017/11/15
  */
-public class FundBaseService extends FundService {
-    private static Logger logger = LoggerFactory.getLogger(FundBaseService.class);
+public class FundSharesPositionService extends FundService {
+    private static Logger logger = LoggerFactory.getLogger(FundSharesPositionService.class);
 
     private static String FUND_BASE_URL = "http://fund.eastmoney.com/f10/jbgk_%s.html";
 
@@ -46,7 +46,6 @@ public class FundBaseService extends FundService {
         FundBaseDAOImpl fundBaseDAO = new FundBaseDAOImpl();
         FundBaseDO fundBaseDO = fundBaseDAO.queryFundBaseByCode(instance.getCode());
         if (null != fundBaseDO) {
-            instance.setId(fundBaseDO.getId());
             fundBaseDAO.updateFundBase(instance);
         } else {
             fundBaseDAO.insertFundBase(instance);
@@ -59,7 +58,7 @@ public class FundBaseService extends FundService {
      */
     public FundBaseDO getFundBase(String code) {
         if (StringUtils.isBlank(code)) {
-            logger.error("code is wrong");
+            logger.error("fundCode is wrong");
             return null;
         }
 

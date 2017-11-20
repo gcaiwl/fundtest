@@ -16,7 +16,16 @@
 
     <!-- service bean -->
     <bean name="fundBaseService" class="com.longxi.data.service.FundBaseService"/>
-    <bean name="fundDetailService" class="com.longxi.data.service.FundDetailService"/>
+    <bean name="fundBondPositionService" class="com.longxi.data.service.FundBondPositionService"/>
+    <bean name="fundConfigService" class="com.longxi.data.service.FundConfigService"/>
+    <bean name="fundFeatureService" class="com.longxi.data.service.FundFeatureService"/>
+    <bean name="fundHolderService" class="com.longxi.data.service.FundHolderService"/>
+    <bean name="fundIndustryService" class="com.longxi.data.service.FundIndustryService"/>
     <bean name="fundListService" class="com.longxi.data.service.FundListService"/>
+    <bean name="fundManagerService" class="com.longxi.data.service.FundManagerService"/>
+    <bean name="fundScaleService" class="com.longxi.data.service.FundScaleService"/>
+    <bean name="fundSharesPositionService" class="com.longxi.data.service.FundSharesPositionService"/>
+    <bean name="fundTurnoverService" class="com.longxi.data.service.FundTurnoverService"/>
     <bean name="fundValueService" class="com.longxi.data.service.FundValueService"/>
+    <bean name="fundDetailService" class="com.longxi.data.service.FundDetailService"/>
 </beans>

@@ -78,14 +78,14 @@ public class FundService {
      * @param value
      * @return
      */
-    protected double getDouble(String value, int scale) {
+    protected BigDecimal getDouble(String value, int scale) {
         if (StringUtils.isBlank(value)) {
-            value = "0";
+            return null;
         }
 
         BigDecimal bigDecimal = new BigDecimal(value.trim());
         bigDecimal.setScale(scale);
-        return bigDecimal.doubleValue();
+        return bigDecimal;
     }
 
     /**
