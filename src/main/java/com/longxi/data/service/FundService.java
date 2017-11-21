@@ -15,45 +15,8 @@ import org.slf4j.LoggerFactory;
  */
 public class FundService {
     private static Logger logger = LoggerFactory.getLogger(FundService.class);
-    /**
-     *
-     */
-    private final String FUND_LIST_URL = "http://service.eastmoney.com/js/fundcode_search.js";
-    /**
-     *
-     */
-    private final String FUND_VALUE_URL = "http://fundgz.1234567.com.cn/js/%s.js";
-    /**
-     *
-     */
-    private final String FUND_DETAIL_URL = "http://service.eastmoney.com/pingzhongdata/%s.js";
-    /**
-     *
-     */
+
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-
-    /**
-     * @return
-     */
-    protected String getFundListUrl() {
-        return FUND_LIST_URL;
-    }
-
-    /**
-     * @param code
-     * @return
-     */
-    protected String getFundDetailUrl(String code) {
-        return String.format(FUND_DETAIL_URL, code);
-    }
-
-    /**
-     * @param code
-     * @return
-     */
-    protected String getFundValueUrl(String code) {
-        return String.format(FUND_VALUE_URL, code);
-    }
 
     /**
      * @param time

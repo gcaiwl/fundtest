@@ -10,10 +10,11 @@
 		<result column="value" property="value" jdbcType="DECIMAL" />
 		<result column="total_value" property="totalValue" jdbcType="DECIMAL" />
 		<result column="increase" property="increase" jdbcType="DECIMAL" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	
 	<sql id="SENTENCE_FUND_VALUE">
-		id,gmt_create,gmt_modified,code,value,total_value,increase		
+		id,gmt_create,gmt_modified,code,value,total_value,increase,publish_time		
 	</sql>
 	
 	
@@ -39,6 +40,9 @@
 			</isNotNull>
 			<isNotNull prepend="AND " property="increase">
 				increase=#increase:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="publishTime">
+				publish_time=#publishTime:TIMESTAMP#
 			</isNotNull>
 		</dynamic>
 	</sql>
@@ -94,6 +98,9 @@
 		 <isNotNull prepend="," property="increase">
 			increase=#increase:DECIMAL#
 		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time=#publishTime:TIMESTAMP#
+		 </isNotNull>
 		WHERE id=#id:BIGINT# 		
 	</update>
 	
@@ -115,6 +122,9 @@
 		 <isNotNull prepend="," property="increase">
 			increase
 		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time
+		 </isNotNull>
 	      )
 	   VALUES
 	      ( now(),now()
@@ -132,6 +142,9 @@
 		 </isNotNull>
 		 <isNotNull prepend="," property="increase">
 			#increase:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			#publishTime:TIMESTAMP#
 		 </isNotNull>
 	      )
 		<selectKey resultClass="long" keyProperty="id">

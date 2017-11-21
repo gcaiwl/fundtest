@@ -73,30 +73,34 @@ public class FundBaseService extends FundService {
         }
 
         FundBaseDO fundBase = null;
-        Document doc = Jsoup.parse(response.getValue());
-        if (null != doc) {
-            fundBase = new FundBaseDO();
-            Elements base = doc.select("table[class='info w790'] td");
-            fundBase.setName(getString(base.get(1).text()));
-            fundBase.setCode(getCode(base.get(2).text()));
-            fundBase.setType(getString(base.get(3).text()));
-            fundBase.setIssueTime(getDate(base.get(4).text()));
-            fundBase.setEstablishTime(getDate(base.get(5).text()));
-            fundBase.setScale(getDoubleUnit(base.get(6).text(), 2));
-            fundBase.setShare(getDoubleUnit(base.get(7).text(), 4));
-            fundBase.setCompany(getString(base.get(10).text()));
+        try {
+            Document doc = Jsoup.parse(response.getValue());
+            if (null != doc) {
+                fundBase = new FundBaseDO();
+                Elements base = doc.select("table[class='info w790'] td");
+                fundBase.setName(getString(base.get(1).text()));
+                fundBase.setCode(getCode(base.get(2).text()));
+                fundBase.setType(getString(base.get(3).text()));
+                fundBase.setIssueTime(getDate(base.get(4).text()));
+                fundBase.setEstablishTime(getDate(base.get(5).text()));
+                fundBase.setScale(getDoubleUnit(base.get(6).text(), 2));
+                fundBase.setShare(getDoubleUnit(base.get(7).text(), 4));
+                fundBase.setCompany(getString(base.get(10).text()));
 
-            Elements fee = doc.select("div[class='bs_jz'] b");
-            fundBase.setFee(getDoublePercent(fee.get(2).text(), 2));
+                Elements fee = doc.select("div[class='bs_jz'] b");
+                fundBase.setFee(getDoublePercent(fee.get(2).text(), 2));
 
-            Elements status = doc.select("div[class='bs_jz'] span");
-            if (status.get(9).outerHtml().contains("span")) {
-                fundBase.setStatus(getStatus(status.get(7).text(), status.get(10).text()));
-                fundBase.setQuota(getQutoa(status.get(9).text()));
-            } else {
-                fundBase.setStatus(getStatus(status.get(7).text(), status.get(9).text()));
-                fundBase.setQuota(0);
+                Elements status = doc.select("div[class='bs_jz'] span");
+                if (status.get(9).outerHtml().contains("span")) {
+                    fundBase.setStatus(getStatus(status.get(7).text(), status.get(10).text()));
+                    fundBase.setQuota(getQutoa(status.get(9).text()));
+                } else {
+                    fundBase.setStatus(getStatus(status.get(7).text(), status.get(9).text()));
+                    fundBase.setQuota(0);
+                }
             }
+        } catch (Exception e) {
+            logger.error(code  + " getFundBase exception ", e);
         }
         return fundBase;
     }

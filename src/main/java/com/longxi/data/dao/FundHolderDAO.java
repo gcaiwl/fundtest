@@ -1,5 +1,6 @@
 package com.longxi.data.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.longxi.data.obj.FundHolderDO;
@@ -37,4 +38,9 @@ public interface FundHolderDAO {
 	*/
 	public int countFundHolderForPage(Query<FundHolderDO> query);
 
+	/**
+	 * 根据自定义条件统计总记录条数，配合分页查询使用
+	 * @param query 分页查询条件
+	 */
+	public FundHolderDO queryFundHolderByPublishTime(String code, Date publishTime);
 }

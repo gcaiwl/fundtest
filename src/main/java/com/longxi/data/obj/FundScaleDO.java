@@ -64,6 +64,12 @@ public class FundScaleDO extends BaseDO {
     private BigDecimal assetsRate;
 
     /**
+     * fund_scale.publish_time
+     * 报告时间
+     */
+    private Date publishTime;
+
+    /**
      * 获取 主键
      * @return the value of fund_scale.id
      */
@@ -205,5 +211,21 @@ public class FundScaleDO extends BaseDO {
      */
     public void setAssetsRate(BigDecimal assetsRate) {
         this.assetsRate = assetsRate;
+    }
+
+    /**
+     * 获取 报告时间
+     * @return the value of fund_scale.publish_time
+     */
+    public Date getPublishTime() {
+        return publishTime;
+    }
+
+    /**
+     * 设置 报告时间
+     * @param publishTime the value for fund_scale.publish_time
+     */
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
     }
 }

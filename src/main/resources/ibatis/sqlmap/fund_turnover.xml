@@ -8,10 +8,11 @@
 		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
 		<result column="code" property="code" jdbcType="CHAR" />
 		<result column="turn_rate" property="turnRate" jdbcType="DECIMAL" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	
 	<sql id="SENTENCE_FUND_TURNOVER">
-		id,gmt_create,gmt_modified,code,turn_rate		
+		id,gmt_create,gmt_modified,code,turn_rate,publish_time		
 	</sql>
 	
 	
@@ -31,6 +32,9 @@
 			</isNotNull>
 			<isNotNull prepend="AND " property="turnRate">
 				turn_rate=#turnRate:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="publishTime">
+				publish_time=#publishTime:TIMESTAMP#
 			</isNotNull>
 		</dynamic>
 	</sql>
@@ -73,12 +77,15 @@
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundTurnoverDAO.updateFundTurnover" parameterClass="com.longxi.data.obj.FundTurnoverDO">
-		 UPDATE fund_turnover  set gmt_modified=now() 
+		 UPDATE fund_turnover  set gmt_modified=now()
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
 		 </isNotNull>
 		 <isNotNull prepend="," property="turnRate">
 			turn_rate=#turnRate:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time=#publishTime:TIMESTAMP#
 		 </isNotNull>
 		WHERE id=#id:BIGINT# 		
 	</update>
@@ -95,6 +102,9 @@
 		 <isNotNull prepend="," property="turnRate">
 			turn_rate
 		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time
+		 </isNotNull>
 	      )
 	   VALUES
 	      ( now(),now()
@@ -106,6 +116,9 @@
 		 </isNotNull>
 		 <isNotNull prepend="," property="turnRate">
 			#turnRate:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			#publishTime:TIMESTAMP#
 		 </isNotNull>
 	      )
 		<selectKey resultClass="long" keyProperty="id">

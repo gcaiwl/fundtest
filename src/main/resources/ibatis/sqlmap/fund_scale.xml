@@ -12,10 +12,11 @@
 		<result column="share" property="share" jdbcType="DECIMAL" />
 		<result column="assets" property="assets" jdbcType="DECIMAL" />
 		<result column="assets_rate" property="assetsRate" jdbcType="DECIMAL" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	
 	<sql id="SENTENCE_FUND_SCALE">
-		id,gmt_create,gmt_modified,code,purchase,redeem,share,assets,assets_rate		
+		id,gmt_create,gmt_modified,code,purchase,redeem,share,assets,assets_rate,publish_time		
 	</sql>
 	
 	
@@ -47,6 +48,9 @@
 			</isNotNull>
 			<isNotNull prepend="AND " property="assetsRate">
 				assets_rate=#assetsRate:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="publishTime">
+				publish_time=#publishTime:TIMESTAMP#
 			</isNotNull>
 		</dynamic>
 	</sql>
@@ -89,7 +93,7 @@
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundScaleDAO.updateFundScale" parameterClass="com.longxi.data.obj.FundScaleDO">
-		 UPDATE fund_scale  set gmt_modified=now() 
+		 UPDATE fund_scale  set gmt_modified=now()
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
 		 </isNotNull>
@@ -107,6 +111,9 @@
 		 </isNotNull>
 		 <isNotNull prepend="," property="assetsRate">
 			assets_rate=#assetsRate:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time=#publishTime:TIMESTAMP#
 		 </isNotNull>
 		WHERE id=#id:BIGINT# 		
 	</update>
@@ -135,6 +142,9 @@
 		 <isNotNull prepend="," property="assetsRate">
 			assets_rate
 		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time
+		 </isNotNull>
 	      )
 	   VALUES
 	      ( now(),now()
@@ -158,6 +168,9 @@
 		 </isNotNull>
 		 <isNotNull prepend="," property="assetsRate">
 			#assetsRate:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			#publishTime:TIMESTAMP#
 		 </isNotNull>
 	      )
 		<selectKey resultClass="long" keyProperty="id">

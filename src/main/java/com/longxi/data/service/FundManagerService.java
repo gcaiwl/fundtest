@@ -78,19 +78,23 @@ public class FundManagerService extends FundService {
         }
 
         List<FundManagerDO> fundManagerDOList = new ArrayList<>();
-        Document doc = Jsoup.parse(response.getValue());
-        if (null != doc) {
-            FundManagerDO fundManagerDO = new FundManagerDO();
-            Elements tr = doc.select("table[class='w782 comm  jloff'] tbody tr");
-            for (int i = 0; i < tr.size(); i++) {
-                Elements td = tr.select("td");
-                fundManagerDO.setCode(code);
-                fundManagerDO.setStartTime(getDate(td.get(0).text()));
-                fundManagerDO.setEndTime(td.get(1).text().equals("至今") ? null : getDate(td.get(1).text()));
-                fundManagerDO.setManager(getString(td.get(2).text()));
-                fundManagerDO.setRedound(getDoublePercent(td.get(4).text(), 2));
-                fundManagerDOList.add(fundManagerDO);
+        try {
+            Document doc = Jsoup.parse(response.getValue());
+            if (null != doc) {
+                FundManagerDO fundManagerDO = new FundManagerDO();
+                Elements tr = doc.select("table[class='w782 comm  jloff'] tbody tr");
+                for (int i = 0; i < tr.size(); i++) {
+                    Elements td = tr.select("td");
+                    fundManagerDO.setCode(code);
+                    fundManagerDO.setStartTime(getDate(td.get(0).text()));
+                    fundManagerDO.setEndTime(td.get(1).text().equals("至今") ? null : getDate(td.get(1).text()));
+                    fundManagerDO.setManager(getString(td.get(2).text()));
+                    fundManagerDO.setRedound(getDoublePercent(td.get(4).text(), 2));
+                    fundManagerDOList.add(fundManagerDO);
+                }
             }
+        } catch (Exception e) {
+            logger.error(code + " getFundManager exception ", e);
         }
         return fundManagerDOList;
     }

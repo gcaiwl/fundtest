@@ -40,6 +40,12 @@ public class FundTurnoverDO extends BaseDO {
     private BigDecimal turnRate;
 
     /**
+     * fund_turnover.publish_time
+     * 报告时间
+     */
+    private Date publishTime;
+
+    /**
      * 获取 主键
      * @return the value of fund_turnover.id
      */
@@ -117,5 +123,21 @@ public class FundTurnoverDO extends BaseDO {
      */
     public void setTurnRate(BigDecimal turnRate) {
         this.turnRate = turnRate;
+    }
+
+    /**
+     * 获取 报告时间
+     * @return the value of fund_turnover.publish_time
+     */
+    public Date getPublishTime() {
+        return publishTime;
+    }
+
+    /**
+     * 设置 报告时间
+     * @param publishTime the value for fund_turnover.publish_time
+     */
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
     }
 }

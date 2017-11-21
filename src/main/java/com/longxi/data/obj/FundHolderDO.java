@@ -58,6 +58,12 @@ public class FundHolderDO extends BaseDO {
     private BigDecimal share;
 
     /**
+     * fund_holder.publish_time
+     * 报告时间
+     */
+    private Date publishTime;
+
+    /**
      * 获取 主键
      * @return the value of fund_holder.id
      */
@@ -183,5 +189,21 @@ public class FundHolderDO extends BaseDO {
      */
     public void setShare(BigDecimal share) {
         this.share = share;
+    }
+
+    /**
+     * 获取 报告时间
+     * @return the value of fund_holder.publish_time
+     */
+    public Date getPublishTime() {
+        return publishTime;
+    }
+
+    /**
+     * 设置 报告时间
+     * @param publishTime the value for fund_holder.publish_time
+     */
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
     }
 }

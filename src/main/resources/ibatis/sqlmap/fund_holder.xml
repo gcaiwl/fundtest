@@ -11,10 +11,11 @@
 		<result column="personal_ratio" property="personalRatio" jdbcType="DECIMAL" />
 		<result column="inside_ratio" property="insideRatio" jdbcType="DECIMAL" />
 		<result column="share" property="share" jdbcType="DECIMAL" />
+		<result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	
 	<sql id="SENTENCE_FUND_HOLDER">
-		id,gmt_create,gmt_modified,code,mechanism_ratio,personal_ratio,inside_ratio,share		
+		id,gmt_create,gmt_modified,code,mechanism_ratio,personal_ratio,inside_ratio,share,publish_time		
 	</sql>
 	
 	
@@ -43,6 +44,9 @@
 			</isNotNull>
 			<isNotNull prepend="AND " property="share">
 				share=#share:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="publishTime">
+				publish_time=#publishTime:TIMESTAMP#
 			</isNotNull>
 		</dynamic>
 	</sql>
@@ -85,7 +89,7 @@
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundHolderDAO.updateFundHolder" parameterClass="com.longxi.data.obj.FundHolderDO">
-		 UPDATE fund_holder  set gmt_modified=now() 
+		 UPDATE fund_holder  set gmt_modified=now()
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
 		 </isNotNull>
@@ -100,6 +104,9 @@
 		 </isNotNull>
 		 <isNotNull prepend="," property="share">
 			share=#share:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time=#publishTime:TIMESTAMP#
 		 </isNotNull>
 		WHERE id=#id:BIGINT# 		
 	</update>
@@ -125,6 +132,9 @@
 		 <isNotNull prepend="," property="share">
 			share
 		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			publish_time
+		 </isNotNull>
 	      )
 	   VALUES
 	      ( now(),now()
@@ -145,6 +155,9 @@
 		 </isNotNull>
 		 <isNotNull prepend="," property="share">
 			#share:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="publishTime">
+			#publishTime:TIMESTAMP#
 		 </isNotNull>
 	      )
 		<selectKey resultClass="long" keyProperty="id">

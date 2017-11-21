@@ -13,20 +13,30 @@ import org.slf4j.LoggerFactory;
 public class FundDetailService extends FundService {
     private static Logger logger = LoggerFactory.getLogger(FundDetailService.class);
 
+    private final String FUND_DETAIL_URL = "http://service.eastmoney.com/pingzhongdata/%s.js";
+
     /**
      * @param code
      */
-    public String queryFundDetail(String code) {
+    public String getFundDetail(String code) {
         if (StringUtils.isBlank(code)) {
-            logger.error("queryFundDetail code is wrong");
+            logger.error("getFundDetail code is wrong");
             return null;
         }
 
         Result<String> response = HttpUtils.get(getFundDetailUrl(code));
         if (StringUtils.isBlank(response.getValue())) {
-            logger.error("queryFundDetail is empty");
+            logger.error("getFundDetail is empty");
             return null;
         }
         return response.getValue();
+    }
+
+    /**
+     * @param code
+     * @return
+     */
+    private String getFundDetailUrl(String code) {
+        return String.format(FUND_DETAIL_URL, code);
     }
 }

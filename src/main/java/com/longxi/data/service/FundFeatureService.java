@@ -79,19 +79,23 @@ public class FundFeatureService extends FundService {
         }
 
         List<FundFeatureDO> fundFeatureDOList = new ArrayList<>();
-        Document doc = Jsoup.parse(response.getValue());
-        if (null != doc) {
-            Elements tr = doc.select("table[class='fxtb'] tr");
-            for (int i = 1; i < tr.size(); i++) {
-                Elements td = tr.get(i).select("td");
-                FundFeatureDO fundFeatureDO = new FundFeatureDO();
-                fundFeatureDO.setCode(code);
-                fundFeatureDO.setFeature(getString(td.get(0).text()));
-                fundFeatureDO.setYear1(getDouble(td.get(1).text()));
-                fundFeatureDO.setYear2(getDouble(td.get(2).text()));
-                fundFeatureDO.setYear3(getDouble(td.get(3).text()));
-                fundFeatureDOList.add(fundFeatureDO);
+        try {
+            Document doc = Jsoup.parse(response.getValue());
+            if (null != doc) {
+                Elements tr = doc.select("table[class='fxtb'] tr");
+                for (int i = 1; i < tr.size(); i++) {
+                    Elements td = tr.get(i).select("td");
+                    FundFeatureDO fundFeatureDO = new FundFeatureDO();
+                    fundFeatureDO.setCode(code);
+                    fundFeatureDO.setFeature(getString(td.get(0).text()));
+                    fundFeatureDO.setYear1(getDouble(td.get(1).text()));
+                    fundFeatureDO.setYear2(getDouble(td.get(2).text()));
+                    fundFeatureDO.setYear3(getDouble(td.get(3).text()));
+                    fundFeatureDOList.add(fundFeatureDO);
+                }
             }
+        } catch (Exception e) {
+            logger.error(code + " getFundFeature exception ", e);
         }
         return fundFeatureDOList;
     }

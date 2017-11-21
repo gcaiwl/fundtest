@@ -18,14 +18,16 @@ import org.slf4j.LoggerFactory;
 public class FundListService extends FundService {
     private static Logger logger = LoggerFactory.getLogger(FundListService.class);
 
+    private final String FUND_LIST_URL = "http://service.eastmoney.com/js/fundcode_search.js";
+
     /**
      * @return
      */
-    public List<String> queryFundList() {
+    public List<String> getFundList() {
         List<String> fundList = new ArrayList<String>();
         Result<String> response = HttpUtils.get(getFundListUrl());
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
-            logger.error("queryFundList return is null or empty");
+            logger.error("getFundList return is null or empty");
             return fundList;
         }
 
@@ -36,8 +38,15 @@ public class FundListService extends FundService {
                 fundList.add(fundArray.getJSONArray(i).getString(0));
             }
         } catch (Exception e) {
-            logger.error("queryFundList exception ", e);
+            logger.error("getFundList exception ", e);
         }
         return fundList;
+    }
+
+    /**
+     * @return
+     */
+    private String getFundListUrl() {
+        return FUND_LIST_URL;
     }
 }

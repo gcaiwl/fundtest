@@ -52,6 +52,12 @@ public class FundValueDO extends BaseDO {
     private BigDecimal increase;
 
     /**
+     * fund_value.publish_time
+     * 报告时间
+     */
+    private Date publishTime;
+
+    /**
      * 获取 主键
      * @return the value of fund_value.id
      */
@@ -161,5 +167,21 @@ public class FundValueDO extends BaseDO {
      */
     public void setIncrease(BigDecimal increase) {
         this.increase = increase;
+    }
+
+    /**
+     * 获取 报告时间
+     * @return the value of fund_value.publish_time
+     */
+    public Date getPublishTime() {
+        return publishTime;
+    }
+
+    /**
+     * 设置 报告时间
+     * @param publishTime the value for fund_value.publish_time
+     */
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
     }
 }

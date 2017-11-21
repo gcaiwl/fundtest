@@ -1,6 +1,7 @@
 package com.longxi.data.dao.impl;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import com.longxi.data.dao.FundHolderDAO;
 
 /**
  * fund_holder表的DAO层实现类
- * Date 2017-11-17 21:38:15
+ * Date 2017-11-21 23:51:41
  */
 public class FundHolderDAOImpl extends SqlMapBaseDAO implements FundHolderDAO {
 	private static final Logger logger = LoggerFactory.getLogger(FundHolderDAOImpl.class);
@@ -113,4 +114,19 @@ public class FundHolderDAOImpl extends SqlMapBaseDAO implements FundHolderDAO {
 		return params;
 	}
 
+	@Override
+	public FundHolderDO queryFundHolderByPublishTime(String code, Date publishTime) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("publishTime", publishTime);
+		List<FundHolderDO> list = queryFundHolder(params);
+		if(list == null || list.isEmpty()){
+			return null;
+		}else if(list.size() != 1){
+			String errMsg = "queryFundHolderByPublishTime return too many records,the param="+params;
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+		return list.get(0);
+	}
 }
