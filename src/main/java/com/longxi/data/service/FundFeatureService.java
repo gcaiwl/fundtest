@@ -46,7 +46,7 @@ public class FundFeatureService extends FundService {
      */
     public void insertOrUpdate(FundFeatureDO instance) {
         if (null == instance) {
-            logger.error("FundFeatureDO is null");
+            logger.error("fundFeatureDO is null");
             return;
         }
 
@@ -82,7 +82,7 @@ public class FundFeatureService extends FundService {
         try {
             Document doc = Jsoup.parse(response.getValue());
             if (null != doc) {
-                Elements tr = doc.select("table[class='fxtb'] tr");
+                Elements tr = doc.select("table[class='fxtb'] tbody tr");
                 for (int i = 1; i < tr.size(); i++) {
                     Elements td = tr.get(i).select("td");
                     FundFeatureDO fundFeatureDO = new FundFeatureDO();
@@ -113,9 +113,6 @@ public class FundFeatureService extends FundService {
      * @return
      */
     private BigDecimal getDouble(String value) {
-        if (StringUtils.isBlank(value) || value.contains("--")) {
-            return null;
-        }
         return value.contains("%") ? getDoublePercent(value, 2) : getDouble(value, 2);
     }
 

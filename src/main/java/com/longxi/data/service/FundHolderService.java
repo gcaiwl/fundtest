@@ -47,7 +47,7 @@ public class FundHolderService extends FundService {
      */
     public void insertOrUpdate(FundHolderDO instance) {
         if (null == instance) {
-            logger.error("FundHolderDO is null");
+            logger.error("fundHolderDO is null");
             return;
         }
 
@@ -81,11 +81,13 @@ public class FundHolderService extends FundService {
 
         List<FundHolderDO> fundHolderDOList = new ArrayList<>();
         try {
-            String result = response.getValue().replaceAll("var apidata=", "").replaceAll(":", "").replaceAll("content:", "\"content\":").replaceAll("summary:", "\"summary\":");
+            String result = response.getValue().replaceAll("var apidata=", "").replaceAll(";", "")
+                .replaceAll("content:", "\"content\":")
+                .replaceAll("summary:", "\"summary\":");
             JSONObject resultJson = JSONObject.parseObject(result);
             Document doc = Jsoup.parse(resultJson.getString("content"));
             if (null != doc) {
-                Elements tr = doc.select("table[class='w782 comm cyrjg'] tr");
+                Elements tr = doc.select("table[class='w782 comm cyrjg'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
                     Elements td = tr.select("td");
                     FundHolderDO fundHolderDO = new FundHolderDO();

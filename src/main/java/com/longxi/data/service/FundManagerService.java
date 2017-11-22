@@ -45,7 +45,7 @@ public class FundManagerService extends FundService {
      */
     public void insertOrUpdate(FundManagerDO instance) {
         if (null == instance) {
-            logger.error("FundManagerDO is null");
+            logger.error("fundManagerDO is null");
             return;
         }
 

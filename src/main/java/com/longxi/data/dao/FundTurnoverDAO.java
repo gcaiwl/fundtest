@@ -1,5 +1,6 @@
 package com.longxi.data.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.longxi.data.obj.FundTurnoverDO;
@@ -37,4 +38,9 @@ public interface FundTurnoverDAO {
 	*/
 	public int countFundTurnoverForPage(Query<FundTurnoverDO> query);
 
+	/**
+	 * 根据主键查询单条记录
+	 * @param id 主键
+	 */
+	public FundTurnoverDO queryFundTurnoverByPublishTime(String code, Date publishTime);
 }

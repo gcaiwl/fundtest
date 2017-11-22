@@ -1,6 +1,7 @@
 package com.longxi.data.dao.impl;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,4 +114,19 @@ public class FundTurnoverDAOImpl extends SqlMapBaseDAO implements FundTurnoverDA
 		return params;
 	}
 
+	@Override
+	public FundTurnoverDO queryFundTurnoverByPublishTime(String code, Date publishTime) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("publishTime", publishTime);
+		List<FundTurnoverDO> list = queryFundTurnover(params);
+		if(list == null || list.isEmpty()){
+			return null;
+		}else if(list.size() != 1){
+			String errMsg = "queryFundTurnoverByPublishTime return too many records,the param="+params;
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+		return list.get(0);
+	}
 }

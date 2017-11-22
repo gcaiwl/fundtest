@@ -1,16 +1,18 @@
 package com.longxi.data.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
-import com.longxi.data.dao.FundBaseDAO;
-import com.longxi.data.dao.impl.FundBaseDAOImpl;
-import com.longxi.data.obj.FundBaseDO;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import com.longxi.data.dao.FundTurnoverDAO;
+import com.longxi.data.obj.FundTurnoverDO;
 import com.longxi.data.obj.Result;
 import com.longxi.data.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,34 +23,38 @@ import org.slf4j.LoggerFactory;
 public class FundTurnoverService extends FundService {
     private static Logger logger = LoggerFactory.getLogger(FundTurnoverService.class);
 
-    private static String FUND_BASE_URL = "http://fund.eastmoney.com/f10/jbgk_%s.html";
+    private static String FUND_TURNOVER_URL = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=ccbdzs&code=%s&page=1&per=200&mode=2";
 
     @Resource
-    private FundBaseDAO fundBaseDAO;
+    private FundTurnoverDAO fundTurnoverDAO;
 
     /**
      * @param code
      */
     public void insertOrUpdate(String code) {
-        FundBaseDO instance = getFundBase(code);
-        insertOrUpdate(instance);
+        List<FundTurnoverDO> fundTurnoverDOList = getFundTurnover(code);
+        if (null != fundTurnoverDOList) {
+            for (int i = 0; i < fundTurnoverDOList.size(); i++) {
+                insertOrUpdate(fundTurnoverDOList.get(i));
+            }
+        }
     }
 
     /**
      * @param instance
      */
-    public void insertOrUpdate(FundBaseDO instance) {
+    public void insertOrUpdate(FundTurnoverDO instance) {
         if (null == instance) {
-            logger.error("fundBaseDO is null");
+            logger.error("fundHolderDO is null");
             return;
         }
 
-        FundBaseDAOImpl fundBaseDAO = new FundBaseDAOImpl();
-        FundBaseDO fundBaseDO = fundBaseDAO.queryFundBaseByCode(instance.getCode());
-        if (null != fundBaseDO) {
-            fundBaseDAO.updateFundBase(instance);
+        FundTurnoverDO fundTurnoverDO = fundTurnoverDAO.queryFundTurnoverByPublishTime(instance.getCode(), instance.getPublishTime());
+        if (null != fundTurnoverDO) {
+            instance.setId(fundTurnoverDO.getId());
+            fundTurnoverDAO.updateFundTurnover(instance);
         } else {
-            fundBaseDAO.insertFundBase(instance);
+            fundTurnoverDAO.insertFundTurnover(instance);
         }
     }
 
@@ -56,14 +62,14 @@ public class FundTurnoverService extends FundService {
      * @param code
      * @return
      */
-    public FundBaseDO getFundBase(String code) {
+    public List<FundTurnoverDO> getFundTurnover(String code) {
         if (StringUtils.isBlank(code)) {
-            logger.error("fundCode is wrong");
+            logger.error("code is wrong");
             return null;
         }
 
-        String url = getFundBaseUrl(code);
-        logger.info(code + " fundbase url is " + url);
+        String url = getFundTurnoverUrl(code);
+        logger.info(code + " fundTurnover url is " + url);
 
         Result<String> response = HttpUtils.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
@@ -71,82 +77,46 @@ public class FundTurnoverService extends FundService {
             return null;
         }
 
-        FundBaseDO fundBase = null;
-        Document doc = Jsoup.parse(response.getValue());
-        if (null != doc) {
-            fundBase = new FundBaseDO();
-            Elements base = doc.select("table[class='info w790'] td");
-            fundBase.setName(getString(base.get(1).text()));
-            fundBase.setCode(getCode(base.get(2).text()));
-            fundBase.setType(getString(base.get(3).text()));
-            fundBase.setIssueTime(getDate(base.get(4).text()));
-            fundBase.setEstablishTime(getDate(base.get(5).text()));
-            fundBase.setScale(getDoubleUnit(base.get(6).text(), 2));
-            fundBase.setShare(getDoubleUnit(base.get(7).text(), 4));
-            fundBase.setCompany(getString(base.get(10).text()));
-
-            Elements fee = doc.select("div[class='bs_jz'] b");
-            fundBase.setFee(getDoublePercent(fee.get(2).text(), 2));
-
-            Elements status = doc.select("div[class='bs_jz'] span");
-            if (status.get(9).outerHtml().contains("span")) {
-                fundBase.setStatus(getStatus(status.get(7).text(), status.get(10).text()));
-                fundBase.setQuota(getQutoa(status.get(9).text()));
-            } else {
-                fundBase.setStatus(getStatus(status.get(7).text(), status.get(9).text()));
-                fundBase.setQuota(0);
+        List<FundTurnoverDO> fundTurnoverDOList = new ArrayList<>();
+        try {
+            String result = response.getValue().replaceAll("var apidata_ccbdzs=", "").replaceAll(";", "")
+                .replaceAll("Data:", "\"Data\":")
+                .replaceAll("TotalCount:", "\"TotalCount\":")
+                .replaceAll("PageIndex:", "\"PageIndex\":")
+                .replaceAll("PageSize:", "\"PageSize\":")
+                .replaceAll("PageCount:", "\"PageCount\":");
+            JSONObject resultJson = JSONObject.parseObject(result);
+            if (null != resultJson) {
+                JSONArray dataArray = resultJson.getJSONArray("Data");
+                if (null != dataArray) {
+                    for (int i = 0; i < dataArray.size(); i++) {
+                        FundTurnoverDO fundTurnoverDO = new FundTurnoverDO();
+                        fundTurnoverDO.setCode(code);
+                        fundTurnoverDO.setPublishTime(getDate(dataArray.getJSONObject(i).getString("REPORTDATE")));
+                        fundTurnoverDO.setTurnRate(getDoublePercent(dataArray.getJSONObject(i).getString("STOCKTURNOVER"), 2));
+                        fundTurnoverDOList.add(fundTurnoverDO);
+                    }
+                }
             }
+        } catch (Exception e) {
+            logger.error(code + " getFundTurnover exception ", e);
         }
-        return fundBase;
+        return fundTurnoverDOList;
     }
 
     /**
      * @param code
      * @return
      */
-    private String getFundBaseUrl(String code) {
-        return String.format(FUND_BASE_URL, code);
+    private String getFundTurnoverUrl(String code) {
+        return String.format(FUND_TURNOVER_URL, code);
     }
 
-    /**
-     * @param apply
-     * @param redeem
-     * @return
-     */
-    private Integer getStatus(String apply, String redeem) {
-        int v1 = apply.contains("开放") ? 10 : 0;
-        int v2 = redeem.contains("开放") ? 1 : 0;
-        return v1 + v2;
+    public FundTurnoverDAO getFundTurnoverDAO() {
+        return fundTurnoverDAO;
     }
 
-    /**
-     * @param code
-     * @return
-     */
-    private String getCode(String code) {
-        if (StringUtils.isBlank(code)) {
-            logger.error("code is null or empty");
-            return code;
-        }
-        return code.trim().replaceAll("\\D*", "");
-    }
-
-    /**
-     * @param value
-     * @return
-     */
-    private Integer getQutoa(String value) {
-        if (StringUtils.isBlank(value)) {
-            value = "0";
-        }
-        return Integer.parseInt(value.trim().replaceAll("\\D*(\\d*)\\D*", "$1"));
-    }
-
-    public FundBaseDAO getFundBaseDAO() {
-        return fundBaseDAO;
-    }
-
-    public void setFundBaseDAO(FundBaseDAO fundBaseDAO) {
-        this.fundBaseDAO = fundBaseDAO;
+    public void setFundTurnoverDAO(FundTurnoverDAO fundTurnoverDAO) {
+        this.fundTurnoverDAO = fundTurnoverDAO;
     }
 }

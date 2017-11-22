@@ -42,7 +42,7 @@ public class FundService {
      * @return
      */
     protected BigDecimal getDouble(String value, int scale) {
-        if (StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(value) || value.contains("-")) {
             return null;
         }
 
@@ -57,10 +57,10 @@ public class FundService {
      * @return
      */
     protected BigDecimal getDoubleUnit(String value, int scale) {
-        if (StringUtils.isBlank(value)) {
-            value = "0";
+        if (StringUtils.isBlank(value) || value.contains("-")) {
+            return null;
         }
-        value = value.trim().replaceAll("(.*)\\D[元|份|%].*", "$1");
+        value = value.trim().replaceAll("(.*)\\D[元|份].*", "$1");
 
         BigDecimal bigDecimal = new BigDecimal(value);
         bigDecimal.setScale(scale);
@@ -73,8 +73,8 @@ public class FundService {
      * @return
      */
     protected BigDecimal getDoublePercent(String value, int scale) {
-        if (StringUtils.isBlank(value)) {
-            value = "0";
+        if (StringUtils.isBlank(value) || value.contains("-")) {
+            return null;
         }
         value = value.trim().replaceAll("(\\d*)%", "$1");
 
