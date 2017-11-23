@@ -37,4 +37,9 @@ public interface FundSharesPositionDAO {
 	*/
 	public int countFundSharesPositionForPage(Query<FundSharesPositionDO> query);
 
+	/**
+	 * 根据主键查询单条记录
+	 * @param id 主键
+	 */
+	public FundSharesPositionDO queryFundSharesPositionByQuarter(String code, String quarter, String sharesCode);
 }

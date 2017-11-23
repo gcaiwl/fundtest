@@ -37,4 +37,9 @@ public interface FundBondPositionDAO {
 	*/
 	public int countFundBondPositionForPage(Query<FundBondPositionDO> query);
 
+	/**
+	 * 根据主键查询单条记录
+	 * @param id 主键
+	 */
+	public FundBondPositionDO queryFundBondPositionByQuarter(String code, String quarter, String bondCode);
 }

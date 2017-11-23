@@ -113,4 +113,20 @@ public class FundSharesPositionDAOImpl extends SqlMapBaseDAO implements FundShar
 		return params;
 	}
 
+	@Override
+	public FundSharesPositionDO queryFundSharesPositionByQuarter(String code, String quarter, String sharesCode) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("quarter", quarter);
+		params.put("sharesCode", sharesCode);
+		List<FundSharesPositionDO> list = queryFundSharesPosition(params);
+		if(list == null || list.isEmpty()){
+			return null;
+		}else if(list.size() != 1){
+			String errMsg = "queryFundSharesPositionByQuarter return too many records,the param="+params;
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+		return list.get(0);
+	}
 }

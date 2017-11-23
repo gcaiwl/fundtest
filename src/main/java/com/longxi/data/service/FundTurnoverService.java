@@ -45,7 +45,7 @@ public class FundTurnoverService extends FundService {
      */
     public void insertOrUpdate(FundTurnoverDO instance) {
         if (null == instance) {
-            logger.error("fundHolderDO is null");
+            logger.error("fundTurnoverDO is null");
             return;
         }
 

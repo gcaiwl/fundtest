@@ -113,4 +113,20 @@ public class FundBondPositionDAOImpl extends SqlMapBaseDAO implements FundBondPo
 		return params;
 	}
 
+	@Override
+	public FundBondPositionDO queryFundBondPositionByQuarter(String code, String quarter, String bondCode) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("quarter", quarter);
+		params.put("bondCode", bondCode);
+		List<FundBondPositionDO> list = queryFundBondPosition(params);
+		if(list == null || list.isEmpty()){
+			return null;
+		}else if(list.size() != 1){
+			String errMsg = "queryFundBondPositionByQuarter return too many records,the param="+params;
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+		return list.get(0);
+	}
 }

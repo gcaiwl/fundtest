@@ -113,4 +113,20 @@ public class FundIndustryDAOImpl extends SqlMapBaseDAO implements FundIndustryDA
 		return params;
 	}
 
+	@Override
+	public FundIndustryDO queryFundIndustryByQuarter(String code, String quarter, String industry) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+		params.put("quarter", quarter);
+		params.put("industry", industry);
+		List<FundIndustryDO> list = queryFundIndustry(params);
+		if(list == null || list.isEmpty()){
+			return null;
+		}else if(list.size() != 1){
+			String errMsg = "queryFundIndustryByQuarter return too many records,the param="+params;
+			logger.error(errMsg);
+			throw new RuntimeException(errMsg);
+		}
+		return list.get(0);
+	}
 }
