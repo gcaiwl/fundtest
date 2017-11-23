@@ -1,5 +1,6 @@
 package com.longxi.data.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.longxi.data.obj.FundValueDO;
@@ -37,4 +38,9 @@ public interface FundValueDAO {
 	*/
 	public int countFundValueForPage(Query<FundValueDO> query);
 
+	/**
+	 * 根据主键查询单条记录
+	 * @param id 主键
+	 */
+	public FundValueDO queryFundValueByPublishTime(String code, Date publishTime);
 }
