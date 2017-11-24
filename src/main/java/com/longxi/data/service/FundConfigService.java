@@ -89,7 +89,7 @@ public class FundConfigService extends FundService {
             if (null != doc) {
                 Elements tr = doc.select("table[class='w782 comm tzxq'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
-                    Elements td = tr.select("td");
+                    Elements td = tr.get(i).select("td");
                     FundConfigDO fundConfigDO = new FundConfigDO();
                     fundConfigDO.setCode(code);
                     fundConfigDO.setPublishTime(getDate(td.get(0).text()));

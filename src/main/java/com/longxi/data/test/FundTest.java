@@ -11,6 +11,16 @@ import com.longxi.data.dao.FundTurnoverDAO;
 import com.longxi.data.dao.impl.FundTurnoverDAOImpl;
 import com.longxi.data.obj.FundTurnoverDO;
 import com.longxi.data.service.FundBaseService;
+import com.longxi.data.service.FundBondPositionService;
+import com.longxi.data.service.FundConfigService;
+import com.longxi.data.service.FundFeatureService;
+import com.longxi.data.service.FundHolderService;
+import com.longxi.data.service.FundIndustryService;
+import com.longxi.data.service.FundManagerService;
+import com.longxi.data.service.FundScaleService;
+import com.longxi.data.service.FundSharesPositionService;
+import com.longxi.data.service.FundTurnoverService;
+import com.longxi.data.service.FundValueService;
 import com.longxi.data.utils.HttpUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -73,7 +83,44 @@ public class FundTest {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-fund.xml");
         applicationContext.start();
         logger.info("context is start... ");
+
         FundBaseService fundBaseService = (FundBaseService)applicationContext.getBean("fundBaseService");
-        fundBaseService.insertOrUpdate("169101");
+        FundBondPositionService fundBondPositionService = (FundBondPositionService)applicationContext.getBean("fundBondPositionService");
+        FundConfigService fundConfigService = (FundConfigService)applicationContext.getBean("fundConfigService");
+        FundFeatureService fundFeatureService = (FundFeatureService)applicationContext.getBean("fundFeatureService");
+        FundHolderService fundHolderService = (FundHolderService)applicationContext.getBean("fundHolderService");
+        FundIndustryService fundIndustryService = (FundIndustryService)applicationContext.getBean("fundIndustryService");
+        FundManagerService fundManagerService = (FundManagerService)applicationContext.getBean("fundManagerService");
+        FundScaleService fundScaleService = (FundScaleService)applicationContext.getBean("fundScaleService");
+        FundSharesPositionService fundSharesPositionService = (FundSharesPositionService)applicationContext.getBean("fundSharesPositionService");
+        FundTurnoverService fundTurnoverService = (FundTurnoverService)applicationContext.getBean("fundTurnoverService");
+        FundValueService fundValueService = (FundValueService)applicationContext.getBean("fundValueService");
+
+        String code = "169101";
+        //logger.info("fundBase insertOrUpdate...");
+        //fundBaseService.insertOrUpdate(code);
+        //logger.info("fundValue insertOrUpdate...");
+        //fundValueService.insertOrUpdate(code);
+        //
+        //logger.info("fundManager insertOrUpdate...");
+        //fundManagerService.insertOrUpdate(code);
+        //logger.info("fundFeature insertOrUpdate...");
+        //fundFeatureService.insertOrUpdate(code);
+        //
+        //logger.info("fundShares insertOrUpdate...");
+        //fundSharesPositionService.insertOrUpdate(code);
+        //logger.info("fundBond insertOrUpdate...");
+        //fundBondPositionService.insertOrUpdate(code);
+        //
+        //logger.info("fundConfig insertOrUpdate...");
+        //fundConfigService.insertOrUpdate(code);
+        //logger.info("fundHolder insertOrUpdate...");
+        //fundHolderService.insertOrUpdate(code);
+        //logger.info("fundScale insertOrUpdate...");
+        //fundScaleService.insertOrUpdate(code);
+        logger.info("fundTurnover insertOrUpdate...");
+        fundTurnoverService.insertOrUpdate(code);
+        logger.info("fundIndustry insertOrUpdate...");
+        fundIndustryService.insertOrUpdate(code);
     }
 }

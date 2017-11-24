@@ -1,6 +1,5 @@
 package com.longxi.data.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,17 +9,12 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import com.longxi.data.dao.FundValueDAO;
-import com.longxi.data.obj.FundSharesPositionDO;
 import com.longxi.data.obj.FundValueDO;
 import com.longxi.data.obj.Result;
 import com.longxi.data.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +85,7 @@ public class FundValueService extends FundService {
             Map<Long, String> valueMap = new HashMap<>();
             Map<Long, String> totalMap = new HashMap<>();
             Map<Long, String> incrMap = new HashMap<>();
-            String[] tmp = response.getValue().split("\n");
+            String[] tmp = response.getValue().split("\r\n");
             for (String t : tmp) {
                 if (t.contains("Data_netWorthTrend")) {
                     t = t.replaceFirst("^.*\\[", "\\[").replaceAll(";", "");
@@ -102,7 +96,7 @@ public class FundValueService extends FundService {
                         incrMap.put(k, jsonArray.getJSONObject(i).getString("equityReturn"));
                     }
                 } else if (t.contains("Data_ACWorthTrend")) {
-                    t = t.replaceFirst("^.*\\[", "\\[").replaceAll(";", "");
+                    t = t.replaceFirst("^.*?\\[", "\\[").replaceAll(";", "");
                     JSONArray jsonArray = JSONArray.parseArray(t);
                     for (int i = 0; i < jsonArray.size(); i++) {
                         JSONArray totalArray = jsonArray.getJSONArray(i);

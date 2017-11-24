@@ -92,22 +92,22 @@ public class FundBondPositionService extends FundService {
             JSONObject resultJson = JSONObject.parseObject(result);
             Document doc = Jsoup.parse(resultJson.getString("content"));
             if (null != doc) {
+                Elements label = doc.select("h4 label[class='left']");
                 Elements table = doc.select("table[class='w782 comm tzxq']");
-                int tableNum = table.size();
                 for (int i = 0; i < table.size(); i++) {
-                    Elements tr = table.select("tbody tr");
+                    String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
+                    Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
-                        Elements td = tr.select("td");
+                        Elements td = tr.get(j).select("td");
                         FundBondPositionDO fundBondPositionDO = new FundBondPositionDO();
                         fundBondPositionDO.setCode(code);
                         fundBondPositionDO.setBondCode(getString(td.get(1).text()));
                         fundBondPositionDO.setBondName(getString(td.get(2).text()));
                         fundBondPositionDO.setAssetsRate(getDoublePercent(td.get(3).text(), 2));
                         fundBondPositionDO.setMarketValue(getDouble(td.get(4).text(), 2));
-                        fundBondPositionDO.setQuarter(resultJson.getString("curyear") + tableNum);
+                        fundBondPositionDO.setQuarter(resultJson.getString("curyear") + num);
                         fundBondPositionDOList.add(fundBondPositionDO);
                     }
-                    tableNum--;
                 }
             }
         } catch (Exception e) {

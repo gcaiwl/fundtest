@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class FundService {
     private static Logger logger = LoggerFactory.getLogger(FundService.class);
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * @param time
@@ -28,6 +28,7 @@ public class FundService {
             logger.error("time is null or empty");
             return date;
         }
+        time = time.replaceAll("\\D", "-").replaceAll("-$", "");
 
         try {
             date = sdf.parse(time.trim());
@@ -42,9 +43,10 @@ public class FundService {
      * @return
      */
     protected BigDecimal getDouble(String value, int scale) {
-        if (StringUtils.isBlank(value) || value.contains("-")) {
+        if (StringUtils.isBlank(value) || !value.matches(".*\\d.*")) {
             return null;
         }
+        value = value.replaceAll(",", "");
 
         BigDecimal bigDecimal = new BigDecimal(value.trim());
         bigDecimal.setScale(scale);
@@ -57,10 +59,10 @@ public class FundService {
      * @return
      */
     protected BigDecimal getDoubleUnit(String value, int scale) {
-        if (StringUtils.isBlank(value) || value.contains("-")) {
+        if (StringUtils.isBlank(value) || !value.matches(".*\\d.*")) {
             return null;
         }
-        value = value.trim().replaceAll("(.*)\\D[元|份].*", "$1");
+        value = value.trim().replaceAll("(.*)\\D[元|份].*", "$1").replaceAll(",", "");
 
         BigDecimal bigDecimal = new BigDecimal(value);
         bigDecimal.setScale(scale);
@@ -73,7 +75,7 @@ public class FundService {
      * @return
      */
     protected BigDecimal getDoublePercent(String value, int scale) {
-        if (StringUtils.isBlank(value) || value.contains("-")) {
+        if (StringUtils.isBlank(value) || !value.matches(".*\\d.*")) {
             return null;
         }
         value = value.trim().replaceAll("(\\d*)%", "$1");

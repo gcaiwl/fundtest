@@ -31,7 +31,7 @@ public class FundManagerService extends FundService {
     /**
      * @param code
      */
-    private void insertOrUpdate(String code) {
+    public void insertOrUpdate(String code) {
         List<FundManagerDO> fundManagerDOList = getFundManager(code);
         if (null != fundManagerDOList) {
             for (FundManagerDO fundManagerDO : fundManagerDOList) {
@@ -81,10 +81,10 @@ public class FundManagerService extends FundService {
         try {
             Document doc = Jsoup.parse(response.getValue());
             if (null != doc) {
-                FundManagerDO fundManagerDO = new FundManagerDO();
                 Elements tr = doc.select("table[class='w782 comm  jloff'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
-                    Elements td = tr.select("td");
+                    Elements td = tr.get(i).select("td");
+                    FundManagerDO fundManagerDO = new FundManagerDO();
                     fundManagerDO.setCode(code);
                     fundManagerDO.setStartTime(getDate(td.get(0).text()));
                     fundManagerDO.setEndTime(td.get(1).text().equals("至今") ? null : getDate(td.get(1).text()));

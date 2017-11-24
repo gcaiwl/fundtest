@@ -92,16 +92,17 @@ public class FundSharesPositionService extends FundService {
             JSONObject resultJson = JSONObject.parseObject(result);
             Document doc = Jsoup.parse(resultJson.getString("content"));
             if (null != doc) {
+                Elements label = doc.select("h4 label[class='left']");
                 Elements table = doc.select("table[class='w782 comm tzxq']");
-                int tableNum = table.size();
                 for (int i = 0; i < table.size(); i++) {
-                    Elements tr = table.select("tbody tr");
+                    String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
+                    Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
                         int ar = 4;
                         int sn = 5;
                         int mv = 6;
 
-                        Elements td = tr.select("td");
+                        Elements td = tr.get(j).select("td");
                         if (td.size() > 7) {
                             ar = 6;
                             sn = 7;
@@ -115,10 +116,9 @@ public class FundSharesPositionService extends FundService {
                         fundSharesPositionDO.setAssetsRate(getDoublePercent(td.get(ar).text(), 2));
                         fundSharesPositionDO.setSharesNum(getDouble(td.get(sn).text(), 2));
                         fundSharesPositionDO.setMarketValue(getDouble(td.get(mv).text(), 2));
-                        fundSharesPositionDO.setQuarter(resultJson.getString("curyear") + tableNum);
+                        fundSharesPositionDO.setQuarter(resultJson.getString("curyear") + num);
                         fundSharesPositionDOList.add(fundSharesPositionDO);
                     }
-                    tableNum--;
                 }
             }
         } catch (Exception e) {

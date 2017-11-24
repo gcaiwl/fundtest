@@ -92,15 +92,16 @@ public class FundIndustryService extends FundService {
             JSONObject resultJson = JSONObject.parseObject(result);
             Document doc = Jsoup.parse(resultJson.getString("content"));
             if (null != doc) {
+                Elements label = doc.select("h4 label[class='left']");
                 Elements table = doc.select("table[class='w782 comm hypz']");
-                int tableNum = table.size();
                 for (int i = 0; i < table.size(); i++) {
-                    Elements tr = table.select("tbody tr");
+                    String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
+                    Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
                         int mr = 2;
                         int mv = 3;
 
-                        Elements td = tr.select("td");
+                        Elements td = tr.get(j).select("td");
                         if (td.size() > 4) {
                             mr = 3;
                             mv = 4;
@@ -111,10 +112,9 @@ public class FundIndustryService extends FundService {
                         fundIndustryDO.setIndustry(getString(td.get(1).text()));
                         fundIndustryDO.setMarketRatio(getDoublePercent(td.get(mr).text(), 2));
                         fundIndustryDO.setMarketValue(getDouble(td.get(mv).text(), 2));
-                        fundIndustryDO.setQuarter(resultJson.getString("curyear") + tableNum);
+                        fundIndustryDO.setQuarter(resultJson.getString("curyear") + num);
                         fundIndustryDOList.add(fundIndustryDO);
                     }
-                    tableNum--;
                 }
             }
         } catch (Exception e) {

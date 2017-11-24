@@ -89,7 +89,7 @@ public class FundScaleService extends FundService {
             if (null != doc) {
                 Elements tr = doc.select("table[class='w782 comm gmbd'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
-                    Elements td = tr.select("td");
+                    Elements td = tr.get(i).select("td");
                     FundScaleDO fundScaleDO = new FundScaleDO();
                     fundScaleDO.setCode(code);
                     fundScaleDO.setPublishTime(getDate(td.get(0).text()));

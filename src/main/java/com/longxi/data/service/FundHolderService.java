@@ -89,7 +89,7 @@ public class FundHolderService extends FundService {
             if (null != doc) {
                 Elements tr = doc.select("table[class='w782 comm cyrjg'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
-                    Elements td = tr.select("td");
+                    Elements td = tr.get(i).select("td");
                     FundHolderDO fundHolderDO = new FundHolderDO();
                     fundHolderDO.setCode(code);
                     fundHolderDO.setPublishTime(getDate(td.get(0).text()));
