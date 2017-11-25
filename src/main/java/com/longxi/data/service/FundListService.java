@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class FundListService extends FundService {
     private static Logger logger = LoggerFactory.getLogger(FundListService.class);
 
-    private final String FUND_LIST_URL = "http://service.eastmoney.com/js/fundcode_search.js";
+    private final String FUND_LIST_URL = "http://fund.eastmoney.com/js/fundcode_search.js";
 
     /**
      * @return

@@ -95,7 +95,7 @@ public class FundBaseService extends FundService {
                 fundBase = new FundBaseDO();
                 Elements base = doc.select("table[class='info w790'] td");
                 fundBase.setName(getString(base.get(1).text()));
-                fundBase.setCode(getCode(base.get(2).text()));
+                fundBase.setCode(code);
                 fundBase.setType(getString(base.get(3).text()));
                 fundBase.setIssueTime(getDate(base.get(4).text()));
                 fundBase.setEstablishTime(getDate(base.get(5).text()));
@@ -138,18 +138,6 @@ public class FundBaseService extends FundService {
         int v1 = apply.contains("开放") ? 10 : 0;
         int v2 = redeem.contains("开放") ? 1 : 0;
         return v1 + v2;
-    }
-
-    /**
-     * @param code
-     * @return
-     */
-    private String getCode(String code) {
-        if (StringUtils.isBlank(code)) {
-            logger.error("code is null or empty");
-            return code;
-        }
-        return code.trim().replaceAll("\\D*", "");
     }
 
     /**
