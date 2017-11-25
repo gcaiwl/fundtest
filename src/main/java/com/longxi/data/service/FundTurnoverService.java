@@ -30,32 +30,48 @@ public class FundTurnoverService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundTurnoverDO> fundTurnoverDOList = getFundTurnover(code);
         if (null != fundTurnoverDOList) {
             for (int i = 0; i < fundTurnoverDOList.size(); i++) {
-                insertOrUpdate(fundTurnoverDOList.get(i));
+                result = result && insertOrUpdate(fundTurnoverDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundTurnoverDO instance) {
+    public boolean insertOrUpdate(FundTurnoverDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundTurnoverDO is null");
-            return;
+            return result;
         }
 
         FundTurnoverDO fundTurnoverDO = fundTurnoverDAO.queryFundTurnoverByPublishTime(instance.getCode(), instance.getPublishTime());
         if (null != fundTurnoverDO) {
             instance.setId(fundTurnoverDO.getId());
-            fundTurnoverDAO.updateFundTurnover(instance);
+            int num = fundTurnoverDAO.updateFundTurnover(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundTurnoverDAO.insertFundTurnover(instance);
+            Long id = fundTurnoverDAO.insertFundTurnover(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

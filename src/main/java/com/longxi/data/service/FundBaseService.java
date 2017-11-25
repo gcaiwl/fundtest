@@ -2,6 +2,8 @@ package com.longxi.data.service;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSONObject;
+
 import com.longxi.data.dao.FundBaseDAO;
 import com.longxi.data.dao.impl.FundBaseDAOImpl;
 import com.longxi.data.obj.FundBaseDO;
@@ -28,29 +30,43 @@ public class FundBaseService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
         FundBaseDO instance = getFundBase(code);
-        insertOrUpdate(instance);
+        return insertOrUpdate(instance);
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundBaseDO instance) {
+    public boolean insertOrUpdate(FundBaseDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundBaseDO is null");
-            return;
+            return result;
         }
 
         FundBaseDAOImpl fundBaseDAO = new FundBaseDAOImpl();
         FundBaseDO fundBaseDO = fundBaseDAO.queryFundBaseByCode(instance.getCode());
         if (null != fundBaseDO) {
             instance.setId(fundBaseDO.getId());
-            fundBaseDAO.updateFundBase(instance);
+            int num = fundBaseDAO.updateFundBase(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundBaseDAO.insertFundBase(instance);
+            Long id = fundBaseDAO.insertFundBase(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

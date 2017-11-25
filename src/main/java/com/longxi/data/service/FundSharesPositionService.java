@@ -36,32 +36,48 @@ public class FundSharesPositionService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundSharesPositionDO> fundIndustryDOList = getFundSharesPosition(code);
         if (null != fundIndustryDOList) {
             for (int i = 0; i < fundIndustryDOList.size(); i++) {
-                insertOrUpdate(fundIndustryDOList.get(i));
+                result = result && insertOrUpdate(fundIndustryDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundSharesPositionDO instance) {
+    public boolean insertOrUpdate(FundSharesPositionDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundSharesPositionDO is null");
-            return;
+            return result;
         }
 
         FundSharesPositionDO fundSharesPositionDO = fundSharesPositionDAO.queryFundSharesPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getSharesCode());
         if (null != fundSharesPositionDO) {
             instance.setId(fundSharesPositionDO.getId());
-            fundSharesPositionDAO.updateFundSharesPosition(instance);
+            int num = fundSharesPositionDAO.updateFundSharesPosition(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundSharesPositionDAO.insertFundSharesPosition(instance);
+            Long id = fundSharesPositionDAO.insertFundSharesPosition(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

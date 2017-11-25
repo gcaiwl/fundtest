@@ -32,32 +32,48 @@ public class FundScaleService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundScaleDO> fundScaleDOList = getFundScale(code);
         if (null != fundScaleDOList) {
             for (int i = 0; i < fundScaleDOList.size(); i++) {
-                insertOrUpdate(fundScaleDOList.get(i));
+                result = result && insertOrUpdate(fundScaleDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundScaleDO instance) {
+    public boolean insertOrUpdate(FundScaleDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundScaleDO is null");
-            return;
+            return result;
         }
 
         FundScaleDO fundScaleDO = fundScaleDAO.queryFundScaleByPublishTime(instance.getCode(), instance.getPublishTime());
         if (null != fundScaleDO) {
             instance.setId(fundScaleDO.getId());
-            fundScaleDAO.updateFundScale(instance);
+            int num = fundScaleDAO.updateFundScale(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundScaleDAO.insertFundScale(instance);
+            Long id = fundScaleDAO.insertFundScale(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

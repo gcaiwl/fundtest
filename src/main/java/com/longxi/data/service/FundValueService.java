@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import com.longxi.data.dao.FundValueDAO;
 import com.longxi.data.obj.FundValueDO;
@@ -31,35 +32,49 @@ public class FundValueService extends FundService {
     private FundValueDAO fundValueDAO;
 
     /**
-     *
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundValueDO> fundValueDOList = getFundValue(code);
         if (null != fundValueDOList) {
             for (int i = 0; i < fundValueDOList.size(); i++) {
-                insertOrUpdate(fundValueDOList.get(i));
+                result = result && insertOrUpdate(fundValueDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
-     *
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundValueDO instance) {
+    public boolean insertOrUpdate(FundValueDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundValueDO is null");
-            return;
+            return result;
         }
 
         FundValueDO fundValueDO = fundValueDAO.queryFundValueByPublishTime(instance.getCode(), instance.getPublishTime());
         if (null != fundValueDO) {
             instance.setId(fundValueDO.getId());
-            fundValueDAO.updateFundValue(instance);
+            int num = fundValueDAO.updateFundValue(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundValueDAO.insertFundValue(instance);
+            Long id = fundValueDAO.insertFundValue(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

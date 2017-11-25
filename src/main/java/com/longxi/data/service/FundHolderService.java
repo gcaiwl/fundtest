@@ -32,32 +32,48 @@ public class FundHolderService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundHolderDO> fundHolderDOList = getFundHolder(code);
         if (null != fundHolderDOList) {
             for (int i = 0; i < fundHolderDOList.size(); i++) {
-                insertOrUpdate(fundHolderDOList.get(i));
+                result = result && insertOrUpdate(fundHolderDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundHolderDO instance) {
+    public boolean insertOrUpdate(FundHolderDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundHolderDO is null");
-            return;
+            return result;
         }
 
         FundHolderDO fundHolderDO = fundHolderDAO.queryFundHolderByPublishTime(instance.getCode(), instance.getPublishTime());
         if (null != fundHolderDO) {
             instance.setId(fundHolderDO.getId());
-            fundHolderDAO.updateFundHolder(instance);
+            int num = fundHolderDAO.updateFundHolder(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundHolderDAO.insertFundHolder(instance);
+            Long id = fundHolderDAO.insertFundHolder(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

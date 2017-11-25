@@ -36,32 +36,48 @@ public class FundIndustryService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundIndustryDO> fundIndustryDOList = getFundIndustry(code);
         if (null != fundIndustryDOList) {
             for (int i = 0; i < fundIndustryDOList.size(); i++) {
-                insertOrUpdate(fundIndustryDOList.get(i));
+                result = result && insertOrUpdate(fundIndustryDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundIndustryDO instance) {
+    public boolean insertOrUpdate(FundIndustryDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundIndustryDO is null");
-            return;
+            return result;
         }
 
         FundIndustryDO fundIndustryDO = fundIndustryDAO.queryFundIndustryByQuarter(instance.getCode(), instance.getQuarter(), instance.getIndustry());
         if (null != fundIndustryDO) {
             instance.setId(fundIndustryDO.getId());
-            fundIndustryDAO.updateFundIndustry(instance);
+            int num = fundIndustryDAO.updateFundIndustry(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundIndustryDAO.insertFundIndustry(instance);
+            Long id = fundIndustryDAO.insertFundIndustry(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

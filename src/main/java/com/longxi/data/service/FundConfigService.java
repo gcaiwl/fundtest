@@ -36,32 +36,48 @@ public class FundConfigService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundConfigDO> fundConfigDOList = getFundConfig(code);
         if (null != fundConfigDOList) {
             for (int i = 0; i < fundConfigDOList.size(); i++) {
-                insertOrUpdate(fundConfigDOList.get(i));
+                result = result && insertOrUpdate(fundConfigDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundConfigDO instance) {
+    public boolean insertOrUpdate(FundConfigDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundConfigDO is null");
-            return;
+            return result;
         }
 
         FundConfigDO fundConfigDO = fundConfigDAO.queryFundConfigByPublishTime(instance.getCode(), instance.getPublishTime());
         if (null != fundConfigDO) {
             instance.setId(fundConfigDO.getId());
-            fundConfigDAO.updateFundConfig(instance);
+            int num = fundConfigDAO.updateFundConfig(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundConfigDAO.insertFundConfig(instance);
+            Long id = fundConfigDAO.insertFundConfig(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

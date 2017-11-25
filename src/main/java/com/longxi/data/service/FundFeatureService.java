@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSONObject;
+
 import com.longxi.data.dao.FundFeatureDAO;
 import com.longxi.data.obj.FundFeatureDO;
 import com.longxi.data.obj.Result;
@@ -31,32 +33,48 @@ public class FundFeatureService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundFeatureDO> fundFeatureDOList = getFundFeature(code);
         if (null != fundFeatureDOList) {
             for (FundFeatureDO fundFeatureDO : fundFeatureDOList) {
-                insertOrUpdate(fundFeatureDO);
+                result = result && insertOrUpdate(fundFeatureDO);
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundFeatureDO instance) {
+    public boolean insertOrUpdate(FundFeatureDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundFeatureDO is null");
-            return;
+            return result;
         }
 
         FundFeatureDO fundFeatureDO = fundFeatureDAO.queryFundFeatureByFeature(instance.getCode(), instance.getFeature());
         if (null != fundFeatureDO) {
             instance.setId(fundFeatureDO.getId());
-            fundFeatureDAO.updateFundFeature(instance);
+            int num = fundFeatureDAO.updateFundFeature(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundFeatureDAO.insertFundFeature(instance);
+            Long id = fundFeatureDAO.insertFundFeature(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**

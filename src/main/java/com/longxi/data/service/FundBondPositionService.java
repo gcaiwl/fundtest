@@ -36,32 +36,48 @@ public class FundBondPositionService extends FundService {
 
     /**
      * @param code
+     * @return
      */
-    public void insertOrUpdate(String code) {
+    public boolean insertOrUpdate(String code) {
+        boolean result = true;
         List<FundBondPositionDO> fundBondPositionDOList = getFundBondPosition(code);
         if (null != fundBondPositionDOList) {
             for (int i = 0; i < fundBondPositionDOList.size(); i++) {
-                insertOrUpdate(fundBondPositionDOList.get(i));
+                result = result && insertOrUpdate(fundBondPositionDOList.get(i));
             }
         }
+        return result;
     }
 
     /**
      * @param instance
+     * @return
      */
-    public void insertOrUpdate(FundBondPositionDO instance) {
+    public boolean insertOrUpdate(FundBondPositionDO instance) {
+        boolean result = false;
         if (null == instance) {
             logger.error("fundBondPositionDO is null");
-            return;
+            return result;
         }
 
         FundBondPositionDO fundBondPositionDO = fundBondPositionDAO.queryFundBondPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getBondCode());
         if (null != fundBondPositionDO) {
             instance.setId(fundBondPositionDO.getId());
-            fundBondPositionDAO.updateFundBondPosition(instance);
+            int num = fundBondPositionDAO.updateFundBondPosition(instance);
+            if (num > -1) {
+                result = true;
+            }
         } else {
-            fundBondPositionDAO.insertFundBondPosition(instance);
+            Long id = fundBondPositionDAO.insertFundBondPosition(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
         }
+
+        if (!result) {
+            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
     }
 
     /**
