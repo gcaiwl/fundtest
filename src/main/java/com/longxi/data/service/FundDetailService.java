@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSONArray;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,9 +71,14 @@ public class FundDetailService {
         }
 
         // fetchData fail retry
+        List<String> badList = new ArrayList<>();
         for (int i = 0; i < failList.size(); i++) {
-            fetchData(failList.get(i));
+            boolean result = fetchData(failList.get(i));
+            if (!result) {
+                badList.add(codeList.get(i));
+            }
         }
+        logger.error("badList is " + JSONArray.toJSONString(badList));
     }
 
     /**
