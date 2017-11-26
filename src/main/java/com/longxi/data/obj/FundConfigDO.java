@@ -58,6 +58,12 @@ public class FundConfigDO extends BaseDO {
     private BigDecimal assets;
 
     /**
+     * fund_config.voucher_ratio
+     * 存托凭证占净比
+     */
+    private BigDecimal voucherRatio;
+
+    /**
      * fund_config.publish_time
      * 报告时间
      */
@@ -189,6 +195,22 @@ public class FundConfigDO extends BaseDO {
      */
     public void setAssets(BigDecimal assets) {
         this.assets = assets;
+    }
+
+    /**
+     * 获取 存托凭证占净比
+     * @return the value of fund_config.voucher_ratio
+     */
+    public BigDecimal getVoucherRatio() {
+        return voucherRatio;
+    }
+
+    /**
+     * 设置 存托凭证占净比
+     * @param voucherRatio the value for fund_config.voucher_ratio
+     */
+    public void setVoucherRatio(BigDecimal voucherRatio) {
+        this.voucherRatio = voucherRatio;
     }
 
     /**

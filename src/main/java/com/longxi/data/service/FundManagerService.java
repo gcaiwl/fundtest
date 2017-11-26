@@ -112,7 +112,7 @@ public class FundManagerService extends FundService {
                         fundManagerDO.setRedound(getDoublePercent(td.get(4).text(), 2));
                         fundManagerDOList.add(fundManagerDO);
                     } catch (Exception e) {
-                        logger.error(code + "|" + tr.toString() + " exception ", e);
+                        logger.error(code + "|" + tr.get(i).toString() + " exception ", e);
                     }
                 }
             }

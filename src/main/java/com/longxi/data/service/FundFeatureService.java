@@ -113,7 +113,7 @@ public class FundFeatureService extends FundService {
                         fundFeatureDO.setYear3(getDouble(td.get(3).text()));
                         fundFeatureDOList.add(fundFeatureDO);
                     } catch (Exception e) {
-                        logger.error(code + "|" + tr.toString() + " exception ", e);
+                        logger.error(code + "|" + tr.get(i).toString() + " exception ", e);
                     }
                 }
             }

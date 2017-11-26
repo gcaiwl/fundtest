@@ -19,23 +19,19 @@ public abstract class FundService implements IFundService {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
+     *
      * @param time
      * @return
+     * @throws ParseException
      */
-    protected Date getDate(String time) {
+    protected Date getDate(String time) throws ParseException {
         Date date = null;
         if (StringUtils.isBlank(time)) {
             logger.error("time is null or empty");
             return date;
         }
         time = time.replaceAll("\\D", "-").replaceAll("-$", "");
-
-        try {
-            date = sdf.parse(time.trim());
-        } catch (ParseException e) {
-            logger.error(time + " getDate exception ", e);
-        }
-        return date;
+        return sdf.parse(time.trim());
     }
 
     /**
@@ -46,7 +42,7 @@ public abstract class FundService implements IFundService {
         if (StringUtils.isBlank(value) || !value.matches(".*\\d.*")) {
             return null;
         }
-        value = value.replaceAll(",", "");
+        value = value.replaceAll(",", "").replaceAll("\\*", "");
 
         BigDecimal bigDecimal = new BigDecimal(value.trim());
         bigDecimal.setScale(scale, BigDecimal.ROUND_DOWN);
@@ -62,7 +58,7 @@ public abstract class FundService implements IFundService {
         if (StringUtils.isBlank(value) || !value.matches(".*\\d.*")) {
             return null;
         }
-        value = value.trim().replaceAll("(.*)\\D[元|份].*", "$1").replaceAll(",", "");
+        value = value.trim().replaceAll("(.*)\\D[元|份].*", "$1").replaceAll(",", "").replaceAll("\\*", "");
 
         BigDecimal bigDecimal = new BigDecimal(value);
         bigDecimal.setScale(scale, BigDecimal.ROUND_DOWN);
@@ -78,7 +74,7 @@ public abstract class FundService implements IFundService {
         if (StringUtils.isBlank(value) || !value.matches(".*\\d.*")) {
             return null;
         }
-        value = value.trim().replaceAll("(\\d*)%", "$1");
+        value = value.trim().replaceAll("(\\d*)%", "$1").replaceAll(",", "").replaceAll("\\*", "");
 
         BigDecimal bigDecimal = new BigDecimal(value);
         bigDecimal.setScale(scale, BigDecimal.ROUND_DOWN);

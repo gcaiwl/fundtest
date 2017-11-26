@@ -117,7 +117,7 @@ public class FundHolderService extends FundService {
                         fundHolderDO.setShare(getDouble(td.get(4).text(), 2));
                         fundHolderDOList.add(fundHolderDO);
                     } catch (Exception e) {
-                        logger.error(code + "|" + tr.toString() + " exception ", e);
+                        logger.error(code + "|" + tr.get(i).toString() + " exception ", e);
                     }
                 }
             }

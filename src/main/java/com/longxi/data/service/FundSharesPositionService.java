@@ -137,7 +137,7 @@ public class FundSharesPositionService extends FundService {
                             fundSharesPositionDO.setQuarter(resultJson.getString("curyear") + num);
                             fundSharesPositionDOList.add(fundSharesPositionDO);
                         } catch (Exception e) {
-                            logger.error(code + "|" + tr.toString() + " exception ", e);
+                            logger.error(code + "|" + tr.get(j).toString() + " exception ", e);
                         }
                     }
                 }

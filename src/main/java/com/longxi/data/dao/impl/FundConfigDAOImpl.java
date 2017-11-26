@@ -15,7 +15,7 @@ import com.longxi.data.dao.FundConfigDAO;
 
 /**
  * fund_config表的DAO层实现类
- * Date 2017-11-21 23:51:41
+ * Date 2017-11-26 22:42:48
  */
 public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 	private static final Logger logger = LoggerFactory.getLogger(FundConfigDAOImpl.class);

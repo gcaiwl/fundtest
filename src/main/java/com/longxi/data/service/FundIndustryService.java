@@ -129,7 +129,7 @@ public class FundIndustryService extends FundService {
                             fundIndustryDO.setQuarter(resultJson.getString("curyear") + num);
                             fundIndustryDOList.add(fundIndustryDO);
                         } catch (Exception e) {
-                            logger.error(code + "|" + tr.toString() + " exception ", e);
+                            logger.error(code + "|" + tr.get(j).toString() + " exception ", e);
                         }
                     }
                 }

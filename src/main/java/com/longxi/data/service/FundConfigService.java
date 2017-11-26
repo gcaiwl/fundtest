@@ -114,10 +114,15 @@ public class FundConfigService extends FundService {
                         fundConfigDO.setSharesRatio(getDoublePercent(td.get(1).text(), 2));
                         fundConfigDO.setBondRatio(getDoublePercent(td.get(2).text(), 2));
                         fundConfigDO.setCashRatio(getDoublePercent(td.get(3).text(), 2));
-                        fundConfigDO.setAssets(getDouble(td.get(4).text(), 2));
+                        if (td.size() > 5) {
+                            fundConfigDO.setVoucherRatio(getDoublePercent(td.get(4).text(), 2));
+                            fundConfigDO.setAssets(getDouble(td.get(5).text(), 2));
+                        } else {
+                            fundConfigDO.setAssets(getDouble(td.get(4).text(), 2));
+                        }
                         fundConfigDOList.add(fundConfigDO);
                     } catch (Exception e) {
-                        logger.error(code + "|" + tr.toString() + " exception ", e);
+                        logger.error(code + "|" + tr.get(i).toString() + " exception ", e);
                     }
                 }
             }
