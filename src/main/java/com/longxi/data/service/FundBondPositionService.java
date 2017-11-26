@@ -38,6 +38,7 @@ public class FundBondPositionService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundBondPositionDO> fundBondPositionDOList = getFundBondPosition(code);
@@ -114,15 +115,19 @@ public class FundBondPositionService extends FundService {
                     String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
                     Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
-                        Elements td = tr.get(j).select("td");
-                        FundBondPositionDO fundBondPositionDO = new FundBondPositionDO();
-                        fundBondPositionDO.setCode(code);
-                        fundBondPositionDO.setBondCode(getString(td.get(1).text()));
-                        fundBondPositionDO.setBondName(getString(td.get(2).text()));
-                        fundBondPositionDO.setAssetsRate(getDoublePercent(td.get(3).text(), 2));
-                        fundBondPositionDO.setMarketValue(getDouble(td.get(4).text(), 2));
-                        fundBondPositionDO.setQuarter(resultJson.getString("curyear") + num);
-                        fundBondPositionDOList.add(fundBondPositionDO);
+                        try {
+                            Elements td = tr.get(j).select("td");
+                            FundBondPositionDO fundBondPositionDO = new FundBondPositionDO();
+                            fundBondPositionDO.setCode(code);
+                            fundBondPositionDO.setBondCode(getString(td.get(1).text()));
+                            fundBondPositionDO.setBondName(getString(td.get(2).text()));
+                            fundBondPositionDO.setAssetsRate(getDoublePercent(td.get(3).text(), 2));
+                            fundBondPositionDO.setMarketValue(getDouble(td.get(4).text(), 2));
+                            fundBondPositionDO.setQuarter(resultJson.getString("curyear") + num);
+                            fundBondPositionDOList.add(fundBondPositionDO);
+                        } catch (Exception e) {
+                            logger.error(code + "|" + tr.toString() + " exception ", e);
+                        }
                     }
                 }
             }

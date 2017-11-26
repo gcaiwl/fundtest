@@ -35,6 +35,7 @@ public class FundFeatureService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundFeatureDO> fundFeatureDOList = getFundFeature(code);
@@ -100,16 +101,20 @@ public class FundFeatureService extends FundService {
         try {
             Document doc = Jsoup.parse(response.getValue());
             if (null != doc) {
-                Elements tr = doc.select("table[class='fxtb'] tbody tr");
+                Elements tr = doc.select("table[class='fxtb']").eq(0).select("tbody tr");
                 for (int i = 1; i < tr.size(); i++) {
-                    Elements td = tr.get(i).select("td");
-                    FundFeatureDO fundFeatureDO = new FundFeatureDO();
-                    fundFeatureDO.setCode(code);
-                    fundFeatureDO.setFeature(getString(td.get(0).text()));
-                    fundFeatureDO.setYear1(getDouble(td.get(1).text()));
-                    fundFeatureDO.setYear2(getDouble(td.get(2).text()));
-                    fundFeatureDO.setYear3(getDouble(td.get(3).text()));
-                    fundFeatureDOList.add(fundFeatureDO);
+                    try {
+                        Elements td = tr.get(i).select("td");
+                        FundFeatureDO fundFeatureDO = new FundFeatureDO();
+                        fundFeatureDO.setCode(code);
+                        fundFeatureDO.setFeature(getString(td.get(0).text()));
+                        fundFeatureDO.setYear1(getDouble(td.get(1).text()));
+                        fundFeatureDO.setYear2(getDouble(td.get(2).text()));
+                        fundFeatureDO.setYear3(getDouble(td.get(3).text()));
+                        fundFeatureDOList.add(fundFeatureDO);
+                    } catch (Exception e) {
+                        logger.error(code + "|" + tr.toString() + " exception ", e);
+                    }
                 }
             }
         } catch (Exception e) {

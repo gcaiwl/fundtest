@@ -38,6 +38,7 @@ public class FundSharesPositionService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundSharesPositionDO> fundIndustryDOList = getFundSharesPosition(code);
@@ -114,26 +115,30 @@ public class FundSharesPositionService extends FundService {
                     String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
                     Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
-                        int ar = 4;
-                        int sn = 5;
-                        int mv = 6;
+                        try {
+                            int ar = 4;
+                            int sn = 5;
+                            int mv = 6;
 
-                        Elements td = tr.get(j).select("td");
-                        if (td.size() > 7) {
-                            ar = 6;
-                            sn = 7;
-                            mv = 8;
+                            Elements td = tr.get(j).select("td");
+                            if (td.size() > 7) {
+                                ar = 6;
+                                sn = 7;
+                                mv = 8;
+                            }
+
+                            FundSharesPositionDO fundSharesPositionDO = new FundSharesPositionDO();
+                            fundSharesPositionDO.setCode(code);
+                            fundSharesPositionDO.setSharesCode(getString(td.get(1).text()));
+                            fundSharesPositionDO.setSharesName(getString(td.get(2).text()));
+                            fundSharesPositionDO.setAssetsRate(getDoublePercent(td.get(ar).text(), 2));
+                            fundSharesPositionDO.setSharesNum(getDouble(td.get(sn).text(), 2));
+                            fundSharesPositionDO.setMarketValue(getDouble(td.get(mv).text(), 2));
+                            fundSharesPositionDO.setQuarter(resultJson.getString("curyear") + num);
+                            fundSharesPositionDOList.add(fundSharesPositionDO);
+                        } catch (Exception e) {
+                            logger.error(code + "|" + tr.toString() + " exception ", e);
                         }
-
-                        FundSharesPositionDO fundSharesPositionDO = new FundSharesPositionDO();
-                        fundSharesPositionDO.setCode(code);
-                        fundSharesPositionDO.setSharesCode(getString(td.get(1).text()));
-                        fundSharesPositionDO.setSharesName(getString(td.get(2).text()));
-                        fundSharesPositionDO.setAssetsRate(getDoublePercent(td.get(ar).text(), 2));
-                        fundSharesPositionDO.setSharesNum(getDouble(td.get(sn).text(), 2));
-                        fundSharesPositionDO.setMarketValue(getDouble(td.get(mv).text(), 2));
-                        fundSharesPositionDO.setQuarter(resultJson.getString("curyear") + num);
-                        fundSharesPositionDOList.add(fundSharesPositionDO);
                     }
                 }
             }

@@ -34,6 +34,7 @@ public class FundScaleService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundScaleDO> fundScaleDOList = getFundScale(code);
@@ -105,16 +106,20 @@ public class FundScaleService extends FundService {
             if (null != doc) {
                 Elements tr = doc.select("table[class='w782 comm gmbd'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
-                    Elements td = tr.get(i).select("td");
-                    FundScaleDO fundScaleDO = new FundScaleDO();
-                    fundScaleDO.setCode(code);
-                    fundScaleDO.setPublishTime(getDate(td.get(0).text()));
-                    fundScaleDO.setPurchase(getDouble(td.get(1).text(), 2));
-                    fundScaleDO.setRedeem(getDouble(td.get(2).text(), 2));
-                    fundScaleDO.setShare(getDouble(td.get(3).text(), 2));
-                    fundScaleDO.setAssets(getDouble(td.get(4).text(), 2));
-                    fundScaleDO.setAssetsRate(getDoublePercent(td.get(5).text(), 2));
-                    fundScaleDOList.add(fundScaleDO);
+                    try {
+                        Elements td = tr.get(i).select("td");
+                        FundScaleDO fundScaleDO = new FundScaleDO();
+                        fundScaleDO.setCode(code);
+                        fundScaleDO.setPublishTime(getDate(td.get(0).text()));
+                        fundScaleDO.setPurchase(getDouble(td.get(1).text(), 2));
+                        fundScaleDO.setRedeem(getDouble(td.get(2).text(), 2));
+                        fundScaleDO.setShare(getDouble(td.get(3).text(), 2));
+                        fundScaleDO.setAssets(getDouble(td.get(4).text(), 2));
+                        fundScaleDO.setAssetsRate(getDoublePercent(td.get(5).text(), 2));
+                        fundScaleDOList.add(fundScaleDO);
+                    } catch (Exception e) {
+                        logger.error(code + "|" + tr.toString() + " exception ", e);
+                    }
                 }
             }
         } catch (Exception e) {

@@ -83,6 +83,15 @@ public class FundDetailService {
 
     /**
      * @param code
+     * @param service
+     */
+    public void debug(String code, IFundService service) {
+        boolean result = (null == service) ? fetchData(code) : service.insertOrUpdate(code);
+        logger.info("debug result is " + result);
+    }
+
+    /**
+     * @param code
      * @return
      */
     private boolean fetchData(String code) {

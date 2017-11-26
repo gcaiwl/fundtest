@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * @author longxi.cwl
  * @date 2017/11/15
  */
-public class FundService {
+public abstract class FundService implements IFundService {
     private static Logger logger = LoggerFactory.getLogger(FundService.class);
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -49,7 +49,7 @@ public class FundService {
         value = value.replaceAll(",", "");
 
         BigDecimal bigDecimal = new BigDecimal(value.trim());
-        bigDecimal.setScale(scale);
+        bigDecimal.setScale(scale, BigDecimal.ROUND_DOWN);
         return bigDecimal;
     }
 
@@ -65,7 +65,7 @@ public class FundService {
         value = value.trim().replaceAll("(.*)\\D[元|份].*", "$1").replaceAll(",", "");
 
         BigDecimal bigDecimal = new BigDecimal(value);
-        bigDecimal.setScale(scale);
+        bigDecimal.setScale(scale, BigDecimal.ROUND_DOWN);
         return bigDecimal;
     }
 
@@ -81,7 +81,7 @@ public class FundService {
         value = value.trim().replaceAll("(\\d*)%", "$1");
 
         BigDecimal bigDecimal = new BigDecimal(value);
-        bigDecimal.setScale(scale);
+        bigDecimal.setScale(scale, BigDecimal.ROUND_DOWN);
         return bigDecimal;
     }
 

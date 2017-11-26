@@ -7,11 +7,7 @@ import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
 
-import com.longxi.data.dao.FundBaseDAO;
 import com.longxi.data.dao.FundIndustryDAO;
-import com.longxi.data.dao.impl.FundBaseDAOImpl;
-import com.longxi.data.obj.FundBaseDO;
-import com.longxi.data.obj.FundHolderDO;
 import com.longxi.data.obj.FundIndustryDO;
 import com.longxi.data.obj.Result;
 import com.longxi.data.utils.HttpUtils;
@@ -38,6 +34,7 @@ public class FundIndustryService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundIndustryDO> fundIndustryDOList = getFundIndustry(code);
@@ -114,22 +111,26 @@ public class FundIndustryService extends FundService {
                     String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
                     Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
-                        int mr = 2;
-                        int mv = 3;
+                        try {
+                            int mr = 2;
+                            int mv = 3;
 
-                        Elements td = tr.get(j).select("td");
-                        if (td.size() > 4) {
-                            mr = 3;
-                            mv = 4;
+                            Elements td = tr.get(j).select("td");
+                            if (td.size() > 4) {
+                                mr = 3;
+                                mv = 4;
+                            }
+
+                            FundIndustryDO fundIndustryDO = new FundIndustryDO();
+                            fundIndustryDO.setCode(code);
+                            fundIndustryDO.setIndustry(getString(td.get(1).text()));
+                            fundIndustryDO.setMarketRatio(getDoublePercent(td.get(mr).text(), 2));
+                            fundIndustryDO.setMarketValue(getDouble(td.get(mv).text(), 2));
+                            fundIndustryDO.setQuarter(resultJson.getString("curyear") + num);
+                            fundIndustryDOList.add(fundIndustryDO);
+                        } catch (Exception e) {
+                            logger.error(code + "|" + tr.toString() + " exception ", e);
                         }
-
-                        FundIndustryDO fundIndustryDO = new FundIndustryDO();
-                        fundIndustryDO.setCode(code);
-                        fundIndustryDO.setIndustry(getString(td.get(1).text()));
-                        fundIndustryDO.setMarketRatio(getDoublePercent(td.get(mr).text(), 2));
-                        fundIndustryDO.setMarketValue(getDouble(td.get(mv).text(), 2));
-                        fundIndustryDO.setQuarter(resultJson.getString("curyear") + num);
-                        fundIndustryDOList.add(fundIndustryDO);
                     }
                 }
             }
@@ -140,7 +141,6 @@ public class FundIndustryService extends FundService {
     }
 
     /**
-     *
      * @param code
      * @return
      */

@@ -32,6 +32,7 @@ public class FundTurnoverService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundTurnoverDO> fundTurnoverDOList = getFundTurnover(code);
@@ -106,11 +107,15 @@ public class FundTurnoverService extends FundService {
                 JSONArray dataArray = resultJson.getJSONArray("Data");
                 if (null != dataArray) {
                     for (int i = 0; i < dataArray.size(); i++) {
-                        FundTurnoverDO fundTurnoverDO = new FundTurnoverDO();
-                        fundTurnoverDO.setCode(code);
-                        fundTurnoverDO.setPublishTime(getDate(dataArray.getJSONObject(i).getString("REPORTDATE")));
-                        fundTurnoverDO.setTurnRate(getDoublePercent(dataArray.getJSONObject(i).getString("STOCKTURNOVER"), 2));
-                        fundTurnoverDOList.add(fundTurnoverDO);
+                        try {
+                            FundTurnoverDO fundTurnoverDO = new FundTurnoverDO();
+                            fundTurnoverDO.setCode(code);
+                            fundTurnoverDO.setPublishTime(getDate(dataArray.getJSONObject(i).getString("REPORTDATE")));
+                            fundTurnoverDO.setTurnRate(getDoublePercent(dataArray.getJSONObject(i).getString("STOCKTURNOVER"), 2));
+                            fundTurnoverDOList.add(fundTurnoverDO);
+                        } catch (Exception e) {
+                            logger.error(code  + "|" + dataArray.getJSONObject(i).toJSONString()+ " exception ", e);
+                        }
                     }
                 }
             }

@@ -35,12 +35,21 @@ public class FundListService extends FundService {
             String funds = response.getValue().replaceFirst("var r = ", "").replaceAll(";", "").trim();
             JSONArray fundArray = JSONArray.parseArray(funds);
             for (int i = 0; i < fundArray.size(); i++) {
+                // 后端基金过滤掉
+                if (fundArray.getJSONArray(i).getString(2).contains("(后端)")) {
+                    continue;
+                }
                 fundList.add(fundArray.getJSONArray(i).getString(0));
             }
         } catch (Exception e) {
             logger.error("getFundList exception ", e);
         }
         return fundList;
+    }
+
+    @Override
+    public boolean insertOrUpdate(String code) {
+        return false;
     }
 
     /**

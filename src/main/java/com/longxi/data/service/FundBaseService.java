@@ -32,6 +32,7 @@ public class FundBaseService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         FundBaseDO instance = getFundBase(code);
         return insertOrUpdate(instance);
@@ -94,25 +95,27 @@ public class FundBaseService extends FundService {
             if (null != doc) {
                 fundBase = new FundBaseDO();
                 Elements base = doc.select("table[class='info w790'] td");
-                fundBase.setName(getString(base.get(1).text()));
-                fundBase.setCode(code);
-                fundBase.setType(getString(base.get(3).text()));
-                fundBase.setIssueTime(getDate(base.get(4).text()));
-                fundBase.setEstablishTime(getDate(base.get(5).text()));
-                fundBase.setScale(getDoubleUnit(base.get(6).text(), 2));
-                fundBase.setShare(getDoubleUnit(base.get(7).text(), 4));
-                fundBase.setCompany(getString(base.get(10).text()));
+                try {
+                    fundBase.setName(getString(base.get(1).text()));
+                    fundBase.setCode(code);
+                    fundBase.setType(getString(base.get(3).text()));
+                    fundBase.setIssueTime(getDate(base.get(4).text()));
+                    fundBase.setEstablishTime(getDate(base.get(5).text()));
+                    fundBase.setScale(getDoubleUnit(base.get(6).text(), 2));
+                    fundBase.setShare(getDoubleUnit(base.get(7).text(), 4));
+                    fundBase.setCompany(getString(base.get(10).text()));
+                } catch (Exception e) {
+                    logger.error(code + "|" + base.toString() + " exception ", e);
+                }
 
-                Elements fee = doc.select("div[class='bs_jz'] b");
-                fundBase.setFee(getDoublePercent(fee.get(2).text(), 2));
-
-                Elements status = doc.select("div[class='bs_jz'] span");
-                if (status.get(9).outerHtml().contains("span")) {
-                    fundBase.setStatus(getStatus(status.get(7).text(), status.get(10).text()));
-                    fundBase.setQuota(getQutoa(status.get(9).text()));
-                } else {
-                    fundBase.setStatus(getStatus(status.get(7).text(), status.get(9).text()));
-                    fundBase.setQuota(0);
+                Elements p = doc.select("div[class='bs_jz'] p");
+                try {
+                    Elements status = p.get(1).select("span");
+                    fundBase.setStatus(getStatus(status.get(0).text(), status.get(2).text()));
+                    fundBase.setQuota(getQutoa(status.get(1).text()));
+                    fundBase.setFee(getDoublePercent(p.get(2).select("b").eq(1).text(), 2));
+                } catch (Exception e) {
+                    logger.error(code + "|" + p.toString() + " exception ", e);
                 }
             }
         } catch (Exception e) {
@@ -145,7 +148,7 @@ public class FundBaseService extends FundService {
      * @return
      */
     private Integer getQutoa(String value) {
-        if (StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(value) || value.trim().equals("&nbsp;")) {
             value = "0";
         }
         return Integer.parseInt(value.trim().replaceAll("\\D*(\\d*)\\D*", "$1"));

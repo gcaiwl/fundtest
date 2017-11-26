@@ -38,6 +38,7 @@ public class FundConfigService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundConfigDO> fundConfigDOList = getFundConfig(code);
@@ -105,15 +106,19 @@ public class FundConfigService extends FundService {
             if (null != doc) {
                 Elements tr = doc.select("table[class='w782 comm tzxq'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
-                    Elements td = tr.get(i).select("td");
-                    FundConfigDO fundConfigDO = new FundConfigDO();
-                    fundConfigDO.setCode(code);
-                    fundConfigDO.setPublishTime(getDate(td.get(0).text()));
-                    fundConfigDO.setSharesRatio(getDoublePercent(td.get(1).text(), 2));
-                    fundConfigDO.setBondRatio(getDoublePercent(td.get(2).text(), 2));
-                    fundConfigDO.setCashRatio(getDoublePercent(td.get(3).text(), 2));
-                    fundConfigDO.setAssets(getDouble(td.get(4).text(), 2));
-                    fundConfigDOList.add(fundConfigDO);
+                    try {
+                        Elements td = tr.get(i).select("td");
+                        FundConfigDO fundConfigDO = new FundConfigDO();
+                        fundConfigDO.setCode(code);
+                        fundConfigDO.setPublishTime(getDate(td.get(0).text()));
+                        fundConfigDO.setSharesRatio(getDoublePercent(td.get(1).text(), 2));
+                        fundConfigDO.setBondRatio(getDoublePercent(td.get(2).text(), 2));
+                        fundConfigDO.setCashRatio(getDoublePercent(td.get(3).text(), 2));
+                        fundConfigDO.setAssets(getDouble(td.get(4).text(), 2));
+                        fundConfigDOList.add(fundConfigDO);
+                    } catch (Exception e) {
+                        logger.error(code + "|" + tr.toString() + " exception ", e);
+                    }
                 }
             }
         } catch (Exception e) {

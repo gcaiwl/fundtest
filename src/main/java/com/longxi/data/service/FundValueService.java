@@ -35,6 +35,7 @@ public class FundValueService extends FundService {
      * @param code
      * @return
      */
+    @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
         List<FundValueDO> fundValueDOList = getFundValue(code);
@@ -121,13 +122,17 @@ public class FundValueService extends FundService {
             }
 
             for (Long k : valueMap.keySet()) {
-                FundValueDO fundValueDO = new FundValueDO();
-                fundValueDO.setCode(code);
-                fundValueDO.setValue(getDouble(valueMap.get(k), 3));
-                fundValueDO.setTotalValue(getDouble(totalMap.get(k), 3));
-                fundValueDO.setIncrease(getDouble(incrMap.get(k), 4));
-                fundValueDO.setPublishTime(new Date(k));
-                fundValueDOList.add(fundValueDO);
+                try {
+                    FundValueDO fundValueDO = new FundValueDO();
+                    fundValueDO.setCode(code);
+                    fundValueDO.setValue(getDouble(valueMap.get(k), 3));
+                    fundValueDO.setTotalValue(getDouble(totalMap.get(k), 3));
+                    fundValueDO.setIncrease(getDouble(incrMap.get(k), 4));
+                    fundValueDO.setPublishTime(new Date(k));
+                    fundValueDOList.add(fundValueDO);
+                } catch (Exception e) {
+                    logger.error(code + "|" + k + "|" + valueMap.get(k) + "|" + totalMap.get(k) + "|"  + incrMap.get(k) + " exception ", e);
+                }
             }
         } catch (Exception e) {
             logger.error(code + " getFundValue exception ", e);
