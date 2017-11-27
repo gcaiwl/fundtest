@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.alibaba.fastjson.JSONArray;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +40,8 @@ public class FundDetailService {
     @Resource
     private FundValueService fundValueService;
 
-    private static final int FETCH_EACH_DATA_SLEEP = 1000;
-    private static final int FETCH_EACH_CODE_SLEEP = 2000;
+    private static final int FETCH_EACH_DATA_SLEEP = 200;
+    private static final int FETCH_EACH_CODE_SLEEP = 200;
 
     /**
      *
@@ -68,17 +66,14 @@ public class FundDetailService {
             if (!result) {
                 failList.add(codeList.get(i));
             }
+            fundListService.updateFundRecord(codeList.get(i), result);
         }
 
         // fetchData fail retry
-        List<String> badList = new ArrayList<>();
         for (int i = 0; i < failList.size(); i++) {
             boolean result = fetchData(failList.get(i));
-            if (!result) {
-                badList.add(codeList.get(i));
-            }
+            fundListService.updateFundRecord(codeList.get(i), result);
         }
-        logger.error("badList is " + JSONArray.toJSONString(badList));
     }
 
     /**

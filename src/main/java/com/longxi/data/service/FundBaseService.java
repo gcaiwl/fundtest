@@ -103,7 +103,7 @@ public class FundBaseService extends FundService {
                     fundBase.setEstablishTime(getDate(base.get(5).text()));
                     fundBase.setScale(getDoubleUnit(base.get(6).text(), 2));
                     fundBase.setShare(getDoubleUnit(base.get(7).text(), 4));
-                    fundBase.setCompany(getString(base.get(10).text()));
+                    fundBase.setCompany(getString(base.get(8).text()));
                 } catch (Exception e) {
                     logger.error(code + "|" + base.toString() + " exception ", e);
                 }
@@ -111,8 +111,8 @@ public class FundBaseService extends FundService {
                 Elements p = doc.select("div[class='bs_jz'] p");
                 try {
                     Elements status = p.get(1).select("span");
-                    fundBase.setStatus(getStatus(status.get(0).text(), status.get(2).text()));
-                    fundBase.setQuota(getQutoa(status.get(1).text()));
+                    fundBase.setStatus(getStatus(status.get(0).text(), status.get(status.size() - 1).text()));
+                    fundBase.setQuota(getQutoa(status.get(status.size() - 2).text()));
                     fundBase.setFee(getDoublePercent(p.get(2).select("b").eq(1).text(), 2));
                 } catch (Exception e) {
                     logger.error(code + "|" + p.toString() + " exception ", e);
@@ -133,11 +133,19 @@ public class FundBaseService extends FundService {
     }
 
     /**
+     * 认购期 = 2
+     * 开放申购、开放赎回 = 11
+     * 开放申购、暂停赎回 = 10
+     * 暂停申购、开放赎回 = 1
+     * 暂停申购、暂停赎回 = 0
      * @param apply
      * @param redeem
      * @return
      */
     private Integer getStatus(String apply, String redeem) {
+        if (apply.contains("认购")) {
+            return 2;
+        }
         int v1 = apply.contains("开放") ? 10 : 0;
         int v2 = redeem.contains("开放") ? 1 : 0;
         return v1 + v2;

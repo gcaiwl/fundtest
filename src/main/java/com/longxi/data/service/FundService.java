@@ -25,10 +25,8 @@ public abstract class FundService implements IFundService {
      * @throws ParseException
      */
     protected Date getDate(String time) throws ParseException {
-        Date date = null;
-        if (StringUtils.isBlank(time)) {
-            logger.error("time is null or empty");
-            return date;
+        if (StringUtils.isBlank(time) || !time.matches(".*\\d.*")) {
+            return null;
         }
         time = time.replaceAll("\\D", "-").replaceAll("-$", "");
         return sdf.parse(time.trim());

@@ -13,6 +13,7 @@
     <bean name="fundSharesPositionDAO" class="com.longxi.data.dao.impl.FundSharesPositionDAOImpl"/>
     <bean name="fundTurnoverDAO" class="com.longxi.data.dao.impl.FundTurnoverDAOImpl"/>
     <bean name="fundValueDAO" class="com.longxi.data.dao.impl.FundValueDAOImpl"/>
+    <bean name="fundRecordDAO" class="com.longxi.data.dao.impl.FundRecordDAOImpl"/>
 
     <!-- service bean -->
     <bean name="fundBaseService" class="com.longxi.data.service.FundBaseService"/>
