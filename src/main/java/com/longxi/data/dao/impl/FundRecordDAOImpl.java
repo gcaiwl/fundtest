@@ -140,4 +140,15 @@ public class FundRecordDAOImpl extends SqlMapBaseDAO implements FundRecordDAO {
 		}
 		return num;
 	}
+
+	@Override
+	public int deleteFundRecord() {
+		int num = -1;
+		try {
+			num = sqlMapClient.update("FundRecordDAO.deleteFundRecord");
+		} catch (Exception e) {
+			logger.error("deleteFundRecord error", e);
+		}
+		return num;
+	}
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="FundRecord">
 
-	<resultMap id="BeanMap" class="com.longxi.data.dao.obj.FundRecordDO">
+	<resultMap id="BeanMap" class="com.longxi.data.obj.FundRecordDO">
 		<result column="id" property="id" jdbcType="BIGINT" />
 		<result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
 		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
@@ -85,7 +85,7 @@
 	</select>
 	
 	<!-- 根据主键更新单条记录  -->
-	<update id="FundRecordDAO.updateFundRecord" parameterClass="com.longxi.data.dao.obj.FundRecordDO">
+	<update id="FundRecordDAO.updateFundRecord" parameterClass="com.longxi.data.obj.FundRecordDO">
 		 UPDATE fund_record  set gmt_modified=now() 
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
@@ -100,7 +100,7 @@
 	</update>
 
 	<!-- 根据主键更新单条记录  -->
-	<update id="FundRecordDAO.updateFundRecordByCode" parameterClass="com.longxi.data.dao.obj.FundRecordDO">
+	<update id="FundRecordDAO.updateFundRecordByCode" parameterClass="com.longxi.data.obj.FundRecordDO">
 		UPDATE fund_record  set gmt_modified=now()
 		<isNotNull prepend="," property="status">
 			status=#status:TINYINT#
@@ -112,7 +112,7 @@
 	</update>
 
 	<!-- 根据DO插入单条记录  -->
-	<insert id="FundRecordDAO.insertFundRecord" parameterClass="com.longxi.data.dao.obj.FundRecordDO">
+	<insert id="FundRecordDAO.insertFundRecord" parameterClass="com.longxi.data.obj.FundRecordDO">
 		INSERT INTO fund_record (gmt_create,gmt_modified
 		 <isNotNull prepend="," property="id">
 			id
@@ -146,6 +146,9 @@
 			select last_insert_id() as id
 		</selectKey>
 	</insert>
-	
+
+	<delete id="FundRecordDAO.deleteFundRecord">
+		DELETE FROM fund_record;
+	</delete>
 	<!-- fund_record-表sql语句结束========================================================= -->
 </sqlMap>

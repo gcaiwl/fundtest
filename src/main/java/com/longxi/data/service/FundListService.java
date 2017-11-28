@@ -33,12 +33,17 @@ public class FundListService extends FundService {
     public List<String> getFundList() {
         List<String> fundList = new ArrayList<String>();
 
+        // 断点执行
         List<FundRecordDO> fundRecordDOList = fundRecordDAO.queryFundRecordByStatus(1);
         if (null != fundRecordDOList && !fundRecordDOList.isEmpty()) {
             for (int i = 0; i < fundRecordDOList.size(); i++) {
                 fundList.add(fundRecordDOList.get(i).getCode());
             }
         } else {
+            // 清空执行记录
+            fundRecordDAO.deleteFundRecord();
+
+            // 重新拉取数据
             Result<String> response = HttpUtils.get(getFundListUrl());
             if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
                 logger.error("getFundList return is null or empty");

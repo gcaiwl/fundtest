@@ -40,8 +40,8 @@ public class FundDetailService {
     @Resource
     private FundValueService fundValueService;
 
-    private static final int FETCH_EACH_DATA_SLEEP = 200;
-    private static final int FETCH_EACH_CODE_SLEEP = 200;
+    private static final int FETCH_EACH_DATA_SLEEP = 220;
+    private static final int FETCH_EACH_CODE_SLEEP = 250;
 
     /**
      *

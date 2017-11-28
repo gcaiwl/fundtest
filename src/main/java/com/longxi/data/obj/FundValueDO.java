@@ -58,6 +58,11 @@ public class FundValueDO extends BaseDO {
     private Date publishTime;
 
     /**
+     * 动态分表名
+     */
+    private String tableName;
+
+    /**
      * 获取 主键
      * @return the value of fund_value.id
      */
@@ -183,5 +188,13 @@ public class FundValueDO extends BaseDO {
      */
     public void setPublishTime(Date publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

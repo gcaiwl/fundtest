@@ -48,4 +48,10 @@ public interface FundRecordDAO {
 	 * @param code
 	 */
 	public int updateFundRecordByCode(String code, int status, int pass);
+
+	/**
+	 * 根据主键更新单条记录
+	 * @param code
+	 */
+	public int deleteFundRecord();
 }

@@ -61,12 +61,12 @@ public class FundValueService extends FundService {
         FundValueDO fundValueDO = fundValueDAO.queryFundValueByPublishTime(instance.getCode(), instance.getPublishTime());
         if (null != fundValueDO) {
             instance.setId(fundValueDO.getId());
-            int num = fundValueDAO.updateFundValue(instance);
+            int num = fundValueDAO.updateFundValue(instance, instance.getCode());
             if (num > -1) {
                 result = true;
             }
         } else {
-            Long id = fundValueDAO.insertFundValue(instance);
+            Long id = fundValueDAO.insertFundValue(instance, instance.getCode());
             if (null != id && id.longValue() > 0) {
                 result = true;
             }

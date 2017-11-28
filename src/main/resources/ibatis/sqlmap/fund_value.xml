@@ -55,7 +55,7 @@
 		SELECT
 		<include refid="SENTENCE_FUND_VALUE" />
 		FROM
-		fund_value
+		$tableName$
 		<include refid="SENTENCE_FUND_VALUE_QUERY"/>
 	</select>
 	
@@ -64,7 +64,7 @@
         SELECT
         	<include refid="SENTENCE_FUND_VALUE"/>
         FROM
-        	fund_value 
+		$tableName$
     		<include refid="SENTENCE_FUND_VALUE_QUERY"/>
         <isNotEmpty prepend="order by " property="_order">
 		$_order$
@@ -79,13 +79,13 @@
 		SELECT  
            count(1)
       	FROM
-			 fund_value 
+		$tableName$
     	<include refid="SENTENCE_FUND_VALUE_QUERY"/>
 	</select>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundValueDAO.updateFundValue" parameterClass="com.longxi.data.obj.FundValueDO">
-		 UPDATE fund_value  set gmt_modified=now()
+		 UPDATE $tableName$  set gmt_modified=now()
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
 		 </isNotNull>
@@ -106,7 +106,7 @@
 	
 	<!-- 根据DO插入单条记录  -->
 	<insert id="FundValueDAO.insertFundValue" parameterClass="com.longxi.data.obj.FundValueDO">
-		INSERT INTO fund_value (gmt_create,gmt_modified
+		INSERT INTO $tableName$ (gmt_create,gmt_modified
 		 <isNotNull prepend="," property="id">
 			id
 		 </isNotNull>

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.longxi.data.obj.Query;
@@ -21,9 +22,10 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 	private static final Logger logger = LoggerFactory.getLogger(FundValueDAOImpl.class);
 
 	@Override
-	public FundValueDO queryFundValueById(Long id) {
+	public FundValueDO queryFundValueById(Long id, String code) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
+		params.put("tableName", getTableName(code));
 		List<FundValueDO> list = queryFundValue(params);
 		if(list == null || list.isEmpty()){
 			return null;
@@ -48,9 +50,10 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 	
 	
 	@Override
-	public int updateFundValue(FundValueDO instance) {
+	public int updateFundValue(FundValueDO instance, String code) {
 		int num = -1;
 		try {
+			instance.setTableName(getTableName(code));
 			num = sqlMapClient.update("FundValueDAO.updateFundValue", instance);
 		} catch (Exception e) {
 			logger.error("updateFundValue error", e);
@@ -59,9 +62,10 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 	}
 	
 	@Override
-	public Long insertFundValue(FundValueDO instance) {
+	public Long insertFundValue(FundValueDO instance, String code) {
 		Long id = null;
 		try {
+			instance.setTableName(getTableName(code));
 			id = (Long) sqlMapClient.insert("FundValueDAO.insertFundValue", instance);
 		} catch (Exception e) {
 			logger.error("insertFundValue error", e);
@@ -71,10 +75,11 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<FundValueDO> queryFundValueByPage(Query<FundValueDO> query) {
+	public List<FundValueDO> queryFundValueByPage(Query<FundValueDO> query, String code) {
 		Map<String, Object> params = convertQuery2Param(query);
-		int count = countFundValueForPage(query);
+		int count = countFundValueForPage(query, code);
 		query.setTotalSize(count);
+		params.put("tableName", getTableName(code));
 		List<FundValueDO> list = Collections.emptyList();
 		try {
 			list = (List<FundValueDO>) sqlMapClient.queryForList("FundValueDAO.queryFundValueByPage", params);
@@ -85,9 +90,10 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 	}
 
 	@Override
-	public int countFundValueForPage(Query<FundValueDO> query) {
+	public int countFundValueForPage(Query<FundValueDO> query, String code) {
 		int count = 0;
 		Map<String, Object> params = convertQuery2Param(query);
+		params.put("tableName", getTableName(code));
 		try {
 			count = (Integer) sqlMapClient.queryForObject("FundValueDAO.countFundValue", params);
 		} catch (Exception e) {
@@ -119,6 +125,7 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("code", code);
 		params.put("publishTime", publishTime);
+		params.put("tableName", getTableName(code));
 		List<FundValueDO> list = queryFundValue(params);
 		if(list == null || list.isEmpty()){
 			return null;
@@ -128,5 +135,17 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	/**
+	 * @param code
+	 * @return
+	 */
+	private String getTableName(String code) {
+		String tableName = "fund_value_%04d";
+		if (StringUtils.isBlank(code)) {
+			return String.format(tableName, 0);
+		}
+		return String.format(tableName, Integer.parseInt(code) % 128);
 	}
 }
