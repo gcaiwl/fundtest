@@ -150,7 +150,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.longxi.data.test.FundTest2</mainClass>
+                            <mainClass>com.longxi.data.test.FundTest</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
