@@ -18,8 +18,8 @@ public class FundTest3 {
             + "`gmt_modified` datetime NOT NULL COMMENT '修改时间',\n"
             + "`code` char(20) NOT NULL COMMENT '编码',\n"
             + "`value` decimal(20,4) NOT NULL COMMENT '净值',\n"
-            + "`total_value` decimal(20,4) NOT NULL COMMENT '累计净值',\n"
-            + "`increase` decimal(20,2) NOT NULL COMMENT '日增长率',\n"
+            + "`total_value` decimal(20,4) NULL COMMENT '累计净值',\n"
+            + "`increase` decimal(20,2) NULL COMMENT '日增长率',\n"
             + "`publish_time` datetime NOT NULL COMMENT '报告时间',\n"
             + "PRIMARY KEY (`id`) ,\n"
             + "INDEX `idx_code` (`code` ASC),\n"
@@ -34,7 +34,7 @@ public class FundTest3 {
         String delete = "delete from fund_value_%04d;";
 
         for (int i = 0; i < 128; i++) {
-            System.out.println(String.format(delete, i, i));
+            System.out.println(String.format(table, i, i));
         }
     }
 }
