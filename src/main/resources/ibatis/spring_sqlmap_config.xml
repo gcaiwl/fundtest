@@ -27,5 +27,6 @@
     <sqlMap resource="ibatis/sqlmap/fund_turnover.xml"/>
     <sqlMap resource="ibatis/sqlmap/fund_value.xml"/>
     <sqlMap resource="ibatis/sqlmap/fund_record.xml"/>
+    <sqlMap resource="ibatis/sqlmap/fund_index.xml"/>
 </sqlMapConfig>
 

@@ -19,7 +19,7 @@ public class FundTest2 {
     private static Logger logger = LoggerFactory.getLogger(FundTest.class);
 
     public static void main(String[] args) {
-        String code = "169101";
+        String code = "001548";
 
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-fund.xml");
         applicationContext.start();
@@ -31,8 +31,8 @@ public class FundTest2 {
             return;
         }
 
-        FundValueService fundValueService = (FundValueService)applicationContext.getBean("fundValueService");
+        FundFeatureService fundFeatureService = (FundFeatureService)applicationContext.getBean("fundFeatureService");
 
-        fundDetailService.debug(code, fundValueService);
+        fundDetailService.debug(code, fundFeatureService);
     }
 }

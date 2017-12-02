@@ -2,14 +2,18 @@ package com.longxi.data.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
 
 import com.longxi.data.dao.FundFeatureDAO;
+import com.longxi.data.dao.FundIndexDAO;
 import com.longxi.data.obj.FundFeatureDO;
+import com.longxi.data.obj.FundIndexDO;
 import com.longxi.data.obj.Result;
 import com.longxi.data.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +34,8 @@ public class FundFeatureService extends FundService {
 
     @Resource
     private FundFeatureDAO fundFeatureDAO;
+    @Resource
+    private FundIndexDAO fundIndexDAO;
 
     /**
      * @param code
@@ -38,10 +44,18 @@ public class FundFeatureService extends FundService {
     @Override
     public boolean insertOrUpdate(String code) {
         boolean result = true;
-        List<FundFeatureDO> fundFeatureDOList = getFundFeature(code);
-        if (null != fundFeatureDOList) {
+        Map<String, Object> map = getFundFeature(code);
+        List<FundFeatureDO> fundFeatureDOList = (List<FundFeatureDO>)map.get("feature");
+        if (null != fundFeatureDOList && !fundFeatureDOList.isEmpty()) {
             for (FundFeatureDO fundFeatureDO : fundFeatureDOList) {
                 result = result && insertOrUpdate(fundFeatureDO);
+            }
+        }
+
+        List<FundIndexDO> fundIndexDOList = (List<FundIndexDO>)map.get("index");
+        if (null != fundIndexDOList && !fundIndexDOList.isEmpty()) {
+            for (FundIndexDO fundIndexDO : fundIndexDOList) {
+                result = result && insertOrUpdate(fundIndexDO);
             }
         }
         return result;
@@ -73,7 +87,38 @@ public class FundFeatureService extends FundService {
         }
 
         if (!result) {
-            logger.error("insertOrUpdate failed " + JSONObject.toJSONString(instance));
+            logger.error("feature insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
+    }
+
+    /**
+     * @param instance
+     * @return
+     */
+    public boolean insertOrUpdate(FundIndexDO instance) {
+        boolean result = false;
+        if (null == instance) {
+            logger.error("fundIndexDO is null");
+            return result;
+        }
+
+        FundIndexDO fundIndexDO = fundIndexDAO.queryFundIndexByFeature(instance.getCode(), instance.getFeature());
+        if (null != fundIndexDO) {
+            instance.setId(fundIndexDO.getId());
+            int num = fundIndexDAO.updateFundIndex(instance);
+            if (num > -1) {
+                result = true;
+            }
+        } else {
+            Long id = fundIndexDAO.insertFundIndex(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
+        }
+
+        if (!result) {
+            logger.error("index insertOrUpdate failed " + JSONObject.toJSONString(instance));
         }
         return result;
     }
@@ -82,7 +127,7 @@ public class FundFeatureService extends FundService {
      * @param code
      * @return
      */
-    public List<FundFeatureDO> getFundFeature(String code) {
+    public Map<String, Object> getFundFeature(String code) {
         if (StringUtils.isBlank(code)) {
             logger.error("fundCode is wrong");
             return null;
@@ -98,6 +143,11 @@ public class FundFeatureService extends FundService {
         }
 
         List<FundFeatureDO> fundFeatureDOList = new ArrayList<>();
+        List<FundIndexDO> fundIndexDOList = new ArrayList<>();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("feature", fundFeatureDOList);
+        map.put("index", fundIndexDOList);
         try {
             Document doc = Jsoup.parse(response.getValue());
             if (null != doc) {
@@ -113,14 +163,31 @@ public class FundFeatureService extends FundService {
                         fundFeatureDO.setYear3(getDouble(td.get(3).text()));
                         fundFeatureDOList.add(fundFeatureDO);
                     } catch (Exception e) {
-                        logger.error(code + "|" + tr.get(i).toString() + " exception ", e);
+                        logger.error("feature|" + code + "|" + tr.get(i).toString() + " exception ", e);
+                    }
+                }
+
+                if (doc.select("table[class='fxtb']").size() > 1) {
+                    Elements tr2 = doc.select("table[class='fxtb']").eq(1).select("tbody tr");
+                    for (int i = 1; i < tr2.size(); i++) {
+                        try {
+                            Elements td = tr2.get(i).select("td");
+                            FundIndexDO fundIndexDO = new FundIndexDO();
+                            fundIndexDO.setCode(code);
+                            fundIndexDO.setFeature(getString(td.get(0).text()));
+                            fundIndexDO.setRange(getDouble(td.get(1).text()));
+                            fundIndexDO.setAvgRange(getDouble(td.get(2).text()));
+                            fundIndexDOList.add(fundIndexDO);
+                        } catch (Exception e) {
+                            logger.error("index|" + code + "|" + tr.get(i).toString() + " exception ", e);
+                        }
                     }
                 }
             }
         } catch (Exception e) {
             logger.error(code + " getFundFeature exception ", e);
         }
-        return fundFeatureDOList;
+        return map;
     }
 
     /**
@@ -145,5 +212,13 @@ public class FundFeatureService extends FundService {
 
     public void setFundFeatureDAO(FundFeatureDAO fundFeatureDAO) {
         this.fundFeatureDAO = fundFeatureDAO;
+    }
+
+    public FundIndexDAO getFundIndexDAO() {
+        return fundIndexDAO;
+    }
+
+    public void setFundIndexDAO(FundIndexDAO fundIndexDAO) {
+        this.fundIndexDAO = fundIndexDAO;
     }
 }

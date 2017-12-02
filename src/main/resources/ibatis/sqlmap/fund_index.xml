@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FundIndex">
+
+	<resultMap id="BeanMap" class="com.longxi.data.obj.FundIndexDO">
+		<result column="id" property="id" jdbcType="BIGINT" />
+		<result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		<result column="code" property="code" jdbcType="CHAR" />
+		<result column="feature" property="feature" jdbcType="VARCHAR" />
+		<result column="range" property="range" jdbcType="DECIMAL" />
+		<result column="avg_range" property="avgRange" jdbcType="DECIMAL" />
+	</resultMap>
+	
+	<sql id="SENTENCE_FUND_INDEX">
+		id,gmt_create,gmt_modified,code,feature,range,avg_range		
+	</sql>
+	
+	
+	<sql id="SENTENCE_FUND_INDEX_QUERY">
+		<dynamic prepend="WHERE " >
+			<isNotNull prepend="AND " property="id">
+				id=#id:BIGINT#
+			</isNotNull>
+			<isNotNull prepend="AND " property="gmtCreate">
+				gmt_create=#gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="gmtModified">
+				gmt_modified=#gmtModified:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="AND " property="code">
+				code=#code:CHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="feature">
+				feature=#feature:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="AND " property="range">
+				range=#range:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="AND " property="avgRange">
+				avg_range=#avgRange:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- fund_index-表sql语句开始++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	
+	<!-- 查询单条记录的sql语句  -->
+	<select id="FundIndexDAO.queryFundIndex" resultMap="BeanMap"
+		parameterClass="java.util.Map">
+		SELECT
+		<include refid="SENTENCE_FUND_INDEX" />
+		FROM
+		fund_index
+		<include refid="SENTENCE_FUND_INDEX_QUERY"/>
+	</select>
+	
+	<!-- 通用的sqlmap查询语句，可返回多条记录，可接受order by及limit语句  -->
+	<select id="FundIndexDAO.queryFundIndexByPage" resultMap="BeanMap" parameterClass="java.util.Map">
+        SELECT
+        	<include refid="SENTENCE_FUND_INDEX"/>
+        FROM
+        	fund_index 
+    		<include refid="SENTENCE_FUND_INDEX_QUERY"/>
+        <isNotEmpty prepend="order by " property="_order">
+		$_order$
+		</isNotEmpty>
+		<isNotEmpty prepend="limit " property="_limit">
+		 #_limit.start#,#_limit.pageSize#
+		</isNotEmpty>
+    </select>
+    
+    <!-- 配合分页使用的count语句,共用同一套查询条件  -->
+    <select id="FundIndexDAO.countFundIndex" resultClass="int" parameterClass="java.util.Map">
+		SELECT  
+           count(1)
+      	FROM
+			 fund_index 
+    	<include refid="SENTENCE_FUND_INDEX_QUERY"/>
+	</select>
+	
+	<!-- 根据主键更新单条记录  -->
+	<update id="FundIndexDAO.updateFundIndex" parameterClass="com.longxi.data.obj.FundIndexDO">
+		 UPDATE fund_index  set gmt_modified=now() 
+		 <isNotNull prepend="," property="code">
+			code=#code:CHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="feature">
+			feature=#feature:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="range">
+			range=#range:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="avgRange">
+			avg_range=#avgRange:DECIMAL#
+		 </isNotNull>
+		WHERE id=#id:BIGINT# 		
+	</update>
+	
+	<!-- 根据DO插入单条记录  -->
+	<insert id="FundIndexDAO.insertFundIndex" parameterClass="com.longxi.data.obj.FundIndexDO">
+		INSERT INTO fund_index (gmt_create,gmt_modified
+		 <isNotNull prepend="," property="id">
+			id
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			code
+		 </isNotNull>
+		 <isNotNull prepend="," property="feature">
+			feature
+		 </isNotNull>
+		 <isNotNull prepend="," property="range">
+			range
+		 </isNotNull>
+		 <isNotNull prepend="," property="avgRange">
+			avg_range
+		 </isNotNull>
+	      )
+	   VALUES
+	      ( now(),now()
+		 <isNotNull prepend="," property="id">
+			#id:BIGINT#
+		 </isNotNull>
+		 <isNotNull prepend="," property="code">
+			#code:CHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="feature">
+			#feature:VARCHAR#
+		 </isNotNull>
+		 <isNotNull prepend="," property="range">
+			#range:DECIMAL#
+		 </isNotNull>
+		 <isNotNull prepend="," property="avgRange">
+			#avgRange:DECIMAL#
+		 </isNotNull>
+	      )
+		<selectKey resultClass="long" keyProperty="id">
+			select last_insert_id() as id
+		</selectKey>
+	</insert>
+	
+	<!-- fund_index-表sql语句结束========================================================= -->
+</sqlMap>

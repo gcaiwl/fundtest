@@ -29,12 +29,12 @@ public class FundTest3 {
             + "DEFAULT CHARACTER SET = utf8\n"
             + "COMMENT = '净值表';";
 
-        String count = "select count(*) from fund_value_%04d;";
+        String count = "select * from fund_value_%04d";
 
         String delete = "delete from fund_value_%04d;";
 
         for (int i = 0; i < 128; i++) {
-            System.out.println(String.format(table, i, i));
+            System.out.println(String.format(count, i));
         }
     }
 }
