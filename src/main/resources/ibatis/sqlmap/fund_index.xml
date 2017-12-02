@@ -8,12 +8,12 @@
 		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
 		<result column="code" property="code" jdbcType="CHAR" />
 		<result column="feature" property="feature" jdbcType="VARCHAR" />
-		<result column="range" property="range" jdbcType="DECIMAL" />
-		<result column="avg_range" property="avgRange" jdbcType="DECIMAL" />
+		<result column="index_value" property="indexValue" jdbcType="DECIMAL" />
+		<result column="avg_value" property="avgValue" jdbcType="DECIMAL" />
 	</resultMap>
 	
 	<sql id="SENTENCE_FUND_INDEX">
-		id,gmt_create,gmt_modified,code,feature,range,avg_range		
+		id,gmt_create,gmt_modified,code,feature,index_value,avg_value		
 	</sql>
 	
 	
@@ -34,11 +34,11 @@
 			<isNotNull prepend="AND " property="feature">
 				feature=#feature:VARCHAR#
 			</isNotNull>
-			<isNotNull prepend="AND " property="range">
-				range=#range:DECIMAL#
+			<isNotNull prepend="AND " property="indexValue">
+				index_value=#indexValue:DECIMAL#
 			</isNotNull>
-			<isNotNull prepend="AND " property="avgRange">
-				avg_range=#avgRange:DECIMAL#
+			<isNotNull prepend="AND " property="avgValue">
+				avg_value=#avgValue:DECIMAL#
 			</isNotNull>
 		</dynamic>
 	</sql>
@@ -81,18 +81,18 @@
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundIndexDAO.updateFundIndex" parameterClass="com.longxi.data.obj.FundIndexDO">
-		 UPDATE fund_index  set gmt_modified=now() 
+		 UPDATE fund_index  set gmt_modified=now()
 		 <isNotNull prepend="," property="code">
 			code=#code:CHAR#
 		 </isNotNull>
 		 <isNotNull prepend="," property="feature">
 			feature=#feature:VARCHAR#
 		 </isNotNull>
-		 <isNotNull prepend="," property="range">
-			range=#range:DECIMAL#
+		 <isNotNull prepend="," property="indexValue">
+			index_value=#indexValue:DECIMAL#
 		 </isNotNull>
-		 <isNotNull prepend="," property="avgRange">
-			avg_range=#avgRange:DECIMAL#
+		 <isNotNull prepend="," property="avgValue">
+			avg_value=#avgValue:DECIMAL#
 		 </isNotNull>
 		WHERE id=#id:BIGINT# 		
 	</update>
@@ -109,11 +109,11 @@
 		 <isNotNull prepend="," property="feature">
 			feature
 		 </isNotNull>
-		 <isNotNull prepend="," property="range">
-			range
+		 <isNotNull prepend="," property="indexValue">
+			index_value
 		 </isNotNull>
-		 <isNotNull prepend="," property="avgRange">
-			avg_range
+		 <isNotNull prepend="," property="avgValue">
+			avg_value
 		 </isNotNull>
 	      )
 	   VALUES
@@ -127,11 +127,11 @@
 		 <isNotNull prepend="," property="feature">
 			#feature:VARCHAR#
 		 </isNotNull>
-		 <isNotNull prepend="," property="range">
-			#range:DECIMAL#
+		 <isNotNull prepend="," property="indexValue">
+			#indexValue:DECIMAL#
 		 </isNotNull>
-		 <isNotNull prepend="," property="avgRange">
-			#avgRange:DECIMAL#
+		 <isNotNull prepend="," property="avgValue">
+			#avgValue:DECIMAL#
 		 </isNotNull>
 	      )
 		<selectKey resultClass="long" keyProperty="id">

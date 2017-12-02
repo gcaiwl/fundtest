@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
 * fund_index表对应的DO
-* Date 2017-12-02 14:48:47
+* Date 2017-12-02 15:26:52
 */
 @SuppressWarnings("serial")
 public class FundIndexDO extends BaseDO {
@@ -40,16 +40,16 @@ public class FundIndexDO extends BaseDO {
     private String feature;
 
     /**
-     * fund_index.range
+     * fund_index.index_value
      * 跟踪误差
      */
-    private BigDecimal range;
+    private BigDecimal indexValue;
 
     /**
-     * fund_index.avg_range
+     * fund_index.avg_value
      * 同类跟踪误差
      */
-    private BigDecimal avgRange;
+    private BigDecimal avgValue;
 
     /**
      * 获取 主键
@@ -133,33 +133,33 @@ public class FundIndexDO extends BaseDO {
 
     /**
      * 获取 跟踪误差
-     * @return the value of fund_index.range
+     * @return the value of fund_index.index_value
      */
-    public BigDecimal getRange() {
-        return range;
+    public BigDecimal getIndexValue() {
+        return indexValue;
     }
 
     /**
      * 设置 跟踪误差
-     * @param range the value for fund_index.range
+     * @param indexValue the value for fund_index.index_value
      */
-    public void setRange(BigDecimal range) {
-        this.range = range;
+    public void setIndexValue(BigDecimal indexValue) {
+        this.indexValue = indexValue;
     }
 
     /**
      * 获取 同类跟踪误差
-     * @return the value of fund_index.avg_range
+     * @return the value of fund_index.avg_value
      */
-    public BigDecimal getAvgRange() {
-        return avgRange;
+    public BigDecimal getAvgValue() {
+        return avgValue;
     }
 
     /**
      * 设置 同类跟踪误差
-     * @param avgRange the value for fund_index.avg_range
+     * @param avgValue the value for fund_index.avg_value
      */
-    public void setAvgRange(BigDecimal avgRange) {
-        this.avgRange = avgRange;
+    public void setAvgValue(BigDecimal avgValue) {
+        this.avgValue = avgValue;
     }
 }

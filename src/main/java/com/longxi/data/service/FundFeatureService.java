@@ -175,8 +175,8 @@ public class FundFeatureService extends FundService {
                             FundIndexDO fundIndexDO = new FundIndexDO();
                             fundIndexDO.setCode(code);
                             fundIndexDO.setFeature(getString(td.get(0).text()));
-                            fundIndexDO.setRange(getDouble(td.get(1).text()));
-                            fundIndexDO.setAvgRange(getDouble(td.get(2).text()));
+                            fundIndexDO.setIndexValue(getDouble(td.get(1).text()));
+                            fundIndexDO.setAvgValue(getDouble(td.get(2).text()));
                             fundIndexDOList.add(fundIndexDO);
                         } catch (Exception e) {
                             logger.error("index|" + code + "|" + tr.get(i).toString() + " exception ", e);
