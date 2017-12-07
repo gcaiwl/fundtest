@@ -40,8 +40,8 @@ public class FundDetailService {
     @Resource
     private FundValueService fundValueService;
 
-    private static final int FETCH_EACH_DATA_SLEEP = 10;
-    private static final int FETCH_EACH_CODE_SLEEP = 10;
+    private static int FETCH_EACH_DATA_SLEEP = 20;
+    private static int FETCH_EACH_CODE_SLEEP = 20;
 
     /**
      *
@@ -70,6 +70,8 @@ public class FundDetailService {
         }
 
         // fetchData fail retry
+        FETCH_EACH_DATA_SLEEP = 400;
+        FETCH_EACH_CODE_SLEEP = 400;
         for (int i = 0; i < failList.size(); i++) {
             boolean result = fetchData(failList.get(i));
             fundListService.updateFundRecord(codeList.get(i), result);
