@@ -70,8 +70,8 @@ public class FundDetailService {
         }
 
         // fetchData fail retry
-        FETCH_EACH_DATA_SLEEP = 400;
-        FETCH_EACH_CODE_SLEEP = 400;
+        FETCH_EACH_DATA_SLEEP = 100;
+        FETCH_EACH_CODE_SLEEP = 100;
         for (int i = 0; i < failList.size(); i++) {
             boolean result = fetchData(failList.get(i));
             fundListService.updateFundRecord(codeList.get(i), result);
