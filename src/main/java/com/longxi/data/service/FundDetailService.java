@@ -68,6 +68,7 @@ public class FundDetailService {
             }
             fundListService.updateFundRecord(codeList.get(i), result);
         }
+        logger.info("enter retry failList size is " + failList.size());
 
         // fetchData fail retry
         FETCH_EACH_DATA_SLEEP = 100;
@@ -76,6 +77,7 @@ public class FundDetailService {
             boolean result = fetchData(failList.get(i));
             fundListService.updateFundRecord(codeList.get(i), result);
         }
+        logger.info("over retry failList size is " + failList.size());
     }
 
     /**
