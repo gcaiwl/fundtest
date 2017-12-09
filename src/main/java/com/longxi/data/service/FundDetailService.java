@@ -1,6 +1,7 @@
 package com.longxi.data.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -40,8 +41,8 @@ public class FundDetailService {
     @Resource
     private FundValueService fundValueService;
 
-    private static int FETCH_EACH_DATA_SLEEP = 20;
-    private static int FETCH_EACH_CODE_SLEEP = 20;
+    private static int FETCH_EACH_DATA_SLEEP = 10;
+    private static int FETCH_EACH_CODE_SLEEP = 10;
 
     /**
      *
@@ -62,20 +63,26 @@ public class FundDetailService {
         // fetchData
         List<String> failList = new ArrayList<>();
         for (int i = 0; i < codeList.size(); i++) {
-            boolean result = fetchData(codeList.get(i));
+            String code = codeList.get(i);
+            boolean result = fetchData(code);
             if (!result) {
-                failList.add(codeList.get(i));
+                failList.add(code);
             }
-            fundListService.updateFundRecord(codeList.get(i), result);
+            fundListService.updateFundRecord(code, result);
         }
         logger.info("enter retry failList size is " + failList.size());
 
         // fetchData fail retry
         FETCH_EACH_DATA_SLEEP = 100;
         FETCH_EACH_CODE_SLEEP = 100;
-        for (int i = 0; i < failList.size(); i++) {
-            boolean result = fetchData(failList.get(i));
-            fundListService.updateFundRecord(codeList.get(i), result);
+        Iterator<String> iterator = failList.iterator();
+        while (iterator.hasNext()) {
+            String code = iterator.next();
+            boolean result = fetchData(code);
+            fundListService.updateFundRecord(code, result);
+            if (result) {
+                iterator.remove();
+            }
         }
         logger.info("over retry failList size is " + failList.size());
     }
