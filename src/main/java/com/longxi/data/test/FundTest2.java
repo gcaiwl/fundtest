@@ -19,7 +19,7 @@ public class FundTest2 {
     private static Logger logger = LoggerFactory.getLogger(FundTest.class);
 
     public static void main(String[] args) {
-        String code = "001548";
+        String code = "169101";
 
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-fund.xml");
         applicationContext.start();

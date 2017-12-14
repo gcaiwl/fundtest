@@ -28,5 +28,6 @@
     <sqlMap resource="ibatis/sqlmap/fund_value.xml"/>
     <sqlMap resource="ibatis/sqlmap/fund_record.xml"/>
     <sqlMap resource="ibatis/sqlmap/fund_index.xml"/>
+    <sqlMap resource="ibatis/sqlmap/fund_style.xml"/>
 </sqlMapConfig>
 

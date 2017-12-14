@@ -12,8 +12,10 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.longxi.data.dao.FundFeatureDAO;
 import com.longxi.data.dao.FundIndexDAO;
+import com.longxi.data.dao.FundStyleDAO;
 import com.longxi.data.obj.FundFeatureDO;
 import com.longxi.data.obj.FundIndexDO;
+import com.longxi.data.obj.FundStyleDO;
 import com.longxi.data.obj.Result;
 import com.longxi.data.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +38,8 @@ public class FundFeatureService extends FundService {
     private FundFeatureDAO fundFeatureDAO;
     @Resource
     private FundIndexDAO fundIndexDAO;
+    @Resource
+    private FundStyleDAO fundStyleDAO;
 
     /**
      * @param code
@@ -58,6 +62,13 @@ public class FundFeatureService extends FundService {
                 result = result && insertOrUpdate(fundIndexDO);
             }
         }
+
+        List<FundStyleDO> fundStyleDOList = (List<FundStyleDO>)map.get("style");
+        if (null != fundStyleDOList && !fundStyleDOList.isEmpty()) {
+            for (FundStyleDO fundStyleDO : fundStyleDOList) {
+                result = result && insertOrUpdate(fundStyleDO);
+            }
+        }
         return result;
     }
 
@@ -72,7 +83,8 @@ public class FundFeatureService extends FundService {
             return result;
         }
 
-        FundFeatureDO fundFeatureDO = fundFeatureDAO.queryFundFeatureByFeature(instance.getCode(), instance.getFeature());
+        FundFeatureDO fundFeatureDO = fundFeatureDAO.queryFundFeatureByFeature(instance.getCode(),
+            instance.getFeature());
         if (null != fundFeatureDO) {
             instance.setId(fundFeatureDO.getId());
             int num = fundFeatureDAO.updateFundFeature(instance);
@@ -124,6 +136,38 @@ public class FundFeatureService extends FundService {
     }
 
     /**
+     *
+     * @param instance
+     * @return
+     */
+    public boolean insertOrUpdate(FundStyleDO instance) {
+        boolean result = false;
+        if (null == instance) {
+            logger.error("fundStyleDO is null");
+            return result;
+        }
+
+        FundStyleDO fundStyleDO = fundStyleDAO.queryFundStyleByStyle(instance.getCode(), instance.getStyle(), instance.getQuarter());
+        if (null != fundStyleDO) {
+            instance.setId(fundStyleDO.getId());
+            int num = fundStyleDAO.updateFundStyle(instance);
+            if (num > -1) {
+                result = true;
+            }
+        } else {
+            Long id = fundStyleDAO.insertFundStyle(instance);
+            if (null != id && id.longValue() > 0) {
+                result = true;
+            }
+        }
+
+        if (!result) {
+            logger.error("style insertOrUpdate failed " + JSONObject.toJSONString(instance));
+        }
+        return result;
+    }
+
+    /**
      * @param code
      * @return
      */
@@ -144,10 +188,13 @@ public class FundFeatureService extends FundService {
 
         List<FundFeatureDO> fundFeatureDOList = new ArrayList<>();
         List<FundIndexDO> fundIndexDOList = new ArrayList<>();
+        List<FundStyleDO> fundStyleDOList = new ArrayList<>();
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("feature", fundFeatureDOList);
         map.put("index", fundIndexDOList);
+        map.put("style", fundStyleDOList);
+
         try {
             Document doc = Jsoup.parse(response.getValue());
             if (null != doc) {
@@ -183,6 +230,19 @@ public class FundFeatureService extends FundService {
                         }
                     }
                 }
+
+                Elements style = doc.select("table[class='fgtb']");
+                if (null != style) {
+                    Elements tr3 = style.select("tbody tr");
+                    for (int i = 1; i < tr3.size(); i++) {
+                        Elements td = tr3.get(i).select("td");
+                        FundStyleDO fundStyleDO = new FundStyleDO();
+                        fundStyleDO.setCode(code);
+                        fundStyleDO.setQuarter(getQuarter(td.get(0).text()));
+                        fundStyleDO.setStyle(getString(td.get(1).text()));
+                        fundStyleDOList.add(fundStyleDO);
+                    }
+                }
             }
         } catch (Exception e) {
             logger.error(code + " getFundFeature exception ", e);
@@ -206,6 +266,17 @@ public class FundFeatureService extends FundService {
         return value.contains("%") ? getDoublePercent(value, 2) : getDouble(value, 2);
     }
 
+    /**
+     * @param time
+     * @return
+     */
+    private String getQuarter(String time) {
+        if (StringUtils.isBlank(time)) {
+            return null;
+        }
+        return time.replaceAll("\\D*", "");
+    }
+
     public FundFeatureDAO getFundFeatureDAO() {
         return fundFeatureDAO;
     }
@@ -220,5 +291,13 @@ public class FundFeatureService extends FundService {
 
     public void setFundIndexDAO(FundIndexDAO fundIndexDAO) {
         this.fundIndexDAO = fundIndexDAO;
+    }
+
+    public FundStyleDAO getFundStyleDAO() {
+        return fundStyleDAO;
+    }
+
+    public void setFundStyleDAO(FundStyleDAO fundStyleDAO) {
+        this.fundStyleDAO = fundStyleDAO;
     }
 }
