@@ -1,11 +1,6 @@
 package com.longxi.data.test;
 
-import com.longxi.data.dao.FundRecordDAO;
-import com.longxi.data.service.FundBaseService;
-import com.longxi.data.service.FundConfigService;
 import com.longxi.data.service.FundDetailService;
-import com.longxi.data.service.FundFeatureService;
-import com.longxi.data.service.FundScaleService;
 import com.longxi.data.service.FundValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +14,7 @@ public class FundTest2 {
     private static Logger logger = LoggerFactory.getLogger(FundTest.class);
 
     public static void main(String[] args) {
-        String code = "169101";
+        String code = "770001";
 
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-fund.xml");
         applicationContext.start();
@@ -31,8 +26,8 @@ public class FundTest2 {
             return;
         }
 
-        FundFeatureService fundFeatureService = (FundFeatureService)applicationContext.getBean("fundFeatureService");
+        FundValueService fundValueService = (FundValueService)applicationContext.getBean("fundValueService");
 
-        fundDetailService.debug(code, fundFeatureService);
+        fundDetailService.debug(code, fundValueService);
     }
 }

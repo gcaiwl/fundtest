@@ -101,7 +101,7 @@ public class FundValueService extends FundService {
             Map<Long, String> valueMap = new HashMap<>();
             Map<Long, String> totalMap = new HashMap<>();
             Map<Long, String> incrMap = new HashMap<>();
-            String[] tmp = response.getValue().split("\r\n");
+            String[] tmp = response.getValue().split(";");
             for (String t : tmp) {
                 if (t.contains("Data_netWorthTrend")) {
                     t = t.replaceFirst("^.*\\[", "\\[").replaceAll(";", "");
@@ -112,6 +112,20 @@ public class FundValueService extends FundService {
                         incrMap.put(k, jsonArray.getJSONObject(i).getString("equityReturn"));
                     }
                 } else if (t.contains("Data_ACWorthTrend")) {
+                    t = t.replaceFirst("^.*?\\[", "\\[").replaceAll(";", "");
+                    JSONArray jsonArray = JSONArray.parseArray(t);
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JSONArray totalArray = jsonArray.getJSONArray(i);
+                        totalMap.put(totalArray.getLong(0), totalArray.getString(1));
+                    }
+                } else if (t.contains("Data_millionCopiesIncome")) {
+                    t = t.replaceFirst("^.*?\\[", "\\[").replaceAll(";", "");
+                    JSONArray jsonArray = JSONArray.parseArray(t);
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JSONArray totalArray = jsonArray.getJSONArray(i);
+                        valueMap.put(totalArray.getLong(0), totalArray.getString(1));
+                    }
+                } else if (t.contains("Data_sevenDaysYearIncome")) {
                     t = t.replaceFirst("^.*?\\[", "\\[").replaceAll(";", "");
                     JSONArray jsonArray = JSONArray.parseArray(t);
                     for (int i = 0; i < jsonArray.size(); i++) {

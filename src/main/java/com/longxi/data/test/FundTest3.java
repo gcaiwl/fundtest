@@ -33,8 +33,10 @@ public class FundTest3 {
 
         String delete = "delete from fund_value_%04d;";
 
+        String index2 = "DROP INDEX `uk_code_publish_time` ON `fund_value_%04d`;";
+
         for (int i = 0; i < 128; i++) {
-            System.out.println(String.format(count, i));
+            System.out.println(String.format(index2, i));
         }
     }
 }
