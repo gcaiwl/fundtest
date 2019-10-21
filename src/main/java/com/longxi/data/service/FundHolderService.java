@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.longxi.data.dao.FundHolderDAO;
 import com.longxi.data.obj.FundHolderDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -90,7 +90,7 @@ public class FundHolderService extends FundService {
         String url = getFundHolderUrl(code);
         logger.info(code + " fundHolder url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -104,17 +104,23 @@ public class FundHolderService extends FundService {
             JSONObject resultJson = JSONObject.parseObject(result);
             Document doc = Jsoup.parse(resultJson.getString("content"));
             if (null != doc) {
+                String year = getCurrentYear();
+                int unit = getUnit(doc.select("table[class='w782 comm cyrjg'] th[class='last']").text());
                 Elements tr = doc.select("table[class='w782 comm cyrjg'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
                     try {
                         Elements td = tr.get(i).select("td");
+                        if (!td.get(0).text().contains(year) && isUpdateIncr) {
+                            continue;
+                        }
+
                         FundHolderDO fundHolderDO = new FundHolderDO();
                         fundHolderDO.setCode(code);
                         fundHolderDO.setPublishTime(getDate(td.get(0).text()));
                         fundHolderDO.setMechanismRatio(getDoublePercent(td.get(1).text(), 2));
                         fundHolderDO.setPersonalRatio(getDoublePercent(td.get(2).text(), 2));
                         fundHolderDO.setInsideRatio(getDoublePercent(td.get(3).text(), 2));
-                        fundHolderDO.setShare(getDouble(td.get(4).text(), 2));
+                        fundHolderDO.setShare(getDoubleUnit(td.get(4).text(), unit, 2));
                         fundHolderDOList.add(fundHolderDO);
                     } catch (Exception e) {
                         logger.error(code + "|" + tr.get(i).toString() + " exception ", e);

@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
  * @author longxi.cwl
  * @date 2017/11/04
  */
-public class HttpUtils {
-    private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
+public class HttpUtil {
+    private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     /**
      * @param url

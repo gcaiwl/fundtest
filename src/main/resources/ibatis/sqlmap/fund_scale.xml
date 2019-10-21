@@ -66,7 +66,19 @@
 		fund_scale
 		<include refid="SENTENCE_FUND_SCALE_QUERY"/>
 	</select>
-	
+
+	<!-- 查询单条记录的sql语句  -->
+	<select id="FundScaleDAO.queryFundScaleLatestByCode" resultMap="BeanMap"
+			parameterClass="java.util.Map">
+		SELECT
+		<include refid="SENTENCE_FUND_SCALE" />
+		FROM
+		fund_scale
+		<include refid="SENTENCE_FUND_SCALE_QUERY"/>
+		ORDER BY publish_time DESC
+		LIMIT 1
+	</select>
+
 	<!-- 通用的sqlmap查询语句，可返回多条记录，可接受order by及limit语句  -->
 	<select id="FundScaleDAO.queryFundScaleByPage" resultMap="BeanMap" parameterClass="java.util.Map">
         SELECT

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.longxi.data.obj.FundHolderDO;
 import com.longxi.data.obj.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,5 +129,19 @@ public class FundStyleDAOImpl extends SqlMapBaseDAO implements FundStyleDAO {
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	@Override
+	public FundStyleDO queryFundStyleLatestByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+
+		FundStyleDO fundStyleDO = null;
+		try {
+			fundStyleDO = (FundStyleDO)sqlMapClient.queryForObject("FundStyleDAO.queryFundStyleLatestByCode", params);
+		} catch (Exception e) {
+			logger.error(code + " queryFundStyleLatestByCode ERROR", e);
+		}
+		return fundStyleDO;
 	}
 }

@@ -7,14 +7,10 @@ import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
 
-import com.longxi.data.dao.FundBaseDAO;
 import com.longxi.data.dao.FundConfigDAO;
-import com.longxi.data.dao.impl.FundBaseDAOImpl;
-import com.longxi.data.obj.FundBaseDO;
 import com.longxi.data.obj.FundConfigDO;
-import com.longxi.data.obj.FundScaleDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -94,7 +90,7 @@ public class FundConfigService extends FundService {
         String url = getFundConfigUrl(code);
         logger.info(code + " fundConfig url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -104,10 +100,16 @@ public class FundConfigService extends FundService {
         try {
             Document doc = Jsoup.parse(response.getValue());
             if (null != doc) {
+                String year = getCurrentYear();
+                int unit = getUnit(doc.select("table[class='w782 comm tzxq'] th[class='last']").text());
                 Elements tr = doc.select("table[class='w782 comm tzxq'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
                     try {
                         Elements td = tr.get(i).select("td");
+                        if (!td.get(0).text().contains(year) && isUpdateIncr) {
+                            continue;
+                        }
+
                         FundConfigDO fundConfigDO = new FundConfigDO();
                         fundConfigDO.setCode(code);
                         fundConfigDO.setPublishTime(getDate(td.get(0).text()));
@@ -116,9 +118,9 @@ public class FundConfigService extends FundService {
                         fundConfigDO.setCashRatio(getDoublePercent(td.get(3).text(), 2));
                         if (td.size() > 5) {
                             fundConfigDO.setVoucherRatio(getDoublePercent(td.get(4).text(), 2));
-                            fundConfigDO.setAssets(getDouble(td.get(5).text(), 2));
+                            fundConfigDO.setAssets(getDoubleUnit(td.get(5).text(), unit, 2));
                         } else {
-                            fundConfigDO.setAssets(getDouble(td.get(4).text(), 2));
+                            fundConfigDO.setAssets(getDoubleUnit(td.get(4).text(), unit, 2));
                         }
                         fundConfigDOList.add(fundConfigDO);
                     } catch (Exception e) {

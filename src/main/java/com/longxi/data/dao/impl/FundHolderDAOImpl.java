@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.longxi.data.obj.FundScaleDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.longxi.data.obj.Query;
@@ -128,5 +129,19 @@ public class FundHolderDAOImpl extends SqlMapBaseDAO implements FundHolderDAO {
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	@Override
+	public FundHolderDO queryFundHolderLatestByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+
+		FundHolderDO fundHolderDO = null;
+		try {
+			fundHolderDO = (FundHolderDO)sqlMapClient.queryForObject("FundHolderDAO.queryFundHolderLatestByCode", params);
+		} catch (Exception e) {
+			logger.error(code + " queryFundHolderLatestByCode ERROR", e);
+		}
+		return fundHolderDO;
 	}
 }

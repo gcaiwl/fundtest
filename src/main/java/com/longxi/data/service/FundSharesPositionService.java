@@ -7,14 +7,10 @@ import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
 
-import com.longxi.data.dao.FundBaseDAO;
 import com.longxi.data.dao.FundSharesPositionDAO;
-import com.longxi.data.dao.impl.FundBaseDAOImpl;
-import com.longxi.data.obj.FundBaseDO;
-import com.longxi.data.obj.FundIndustryDO;
 import com.longxi.data.obj.FundSharesPositionDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -94,7 +90,7 @@ public class FundSharesPositionService extends FundService {
         String url = getFundSharesPositionUrl(code);
         logger.info(code + " fundSharesPosition url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -106,13 +102,21 @@ public class FundSharesPositionService extends FundService {
                 .replaceAll("content:", "\"content\":")
                 .replaceAll("arryear:", "\"arryear\":")
                 .replaceAll("curyear:", "\"curyear\":");
+
+            String year = getCurrentYear();
             JSONObject resultJson = JSONObject.parseObject(result);
+            if (!resultJson.getString("curyear").contains(year) && isUpdateIncr) {
+                return fundSharesPositionDOList;
+            }
+
             Document doc = Jsoup.parse(resultJson.getString("content"));
             if (null != doc) {
                 Elements label = doc.select("h4 label[class='left']");
                 Elements table = doc.select("table[class='w782 comm tzxq']");
                 for (int i = 0; i < table.size(); i++) {
                     String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
+                    int shareUnit = getUnit(table.get(i).select("th[class='cgs']").text());
+                    int valueUnit = getUnit(table.get(i).select("th[class='last ccs']").text());
                     Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
                         try {
@@ -132,8 +136,8 @@ public class FundSharesPositionService extends FundService {
                             fundSharesPositionDO.setSharesCode(getString(td.get(1).text()));
                             fundSharesPositionDO.setSharesName(getString(td.get(2).text()));
                             fundSharesPositionDO.setAssetsRate(getDoublePercent(td.get(ar).text(), 2));
-                            fundSharesPositionDO.setSharesNum(getDouble(td.get(sn).text(), 2));
-                            fundSharesPositionDO.setMarketValue(getDouble(td.get(mv).text(), 2));
+                            fundSharesPositionDO.setSharesNum(getDoubleUnit(td.get(sn).text(), shareUnit, 2));
+                            fundSharesPositionDO.setMarketValue(getDoubleUnit(td.get(mv).text(), valueUnit, 2));
                             fundSharesPositionDO.setQuarter(resultJson.getString("curyear") + num);
                             fundSharesPositionDOList.add(fundSharesPositionDO);
                         } catch (Exception e) {

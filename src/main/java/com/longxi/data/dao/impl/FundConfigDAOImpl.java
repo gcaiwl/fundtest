@@ -34,7 +34,7 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 		}
 		return list.get(0);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private List<FundConfigDO> queryFundConfig(Map<String,Object> params) {
 		List<FundConfigDO> list = Collections.emptyList();
@@ -45,8 +45,8 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 		}
 		return list;
 	}
-	
-	
+
+
 	@Override
 	public int updateFundConfig(FundConfigDO instance) {
 		int num = -1;
@@ -57,7 +57,7 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 		}
 		return num;
 	}
-	
+
 	@Override
 	public Long insertFundConfig(FundConfigDO instance) {
 		Long id = null;
@@ -95,22 +95,22 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 		}
 		return count;
 	}
-	
+
 	private Map<String, Object> convertQuery2Param(Query<FundConfigDO> query){
 		FundConfigDO instance = query.getModule();
 		Map<String, Object> params = new HashMap<String, Object>();
-		
+
 		// TODO 自行添加分页查询可能的条件
 		//params.put("id", instance.getId());
 		//params.put("isDel", instance.getIsDel()==null?0:instance.getIsDel());//默认只查询未被删除的
-		
+
 		params.put("_order", query.getOrderBy());
-		
+
 		Map<String, Object> _limit = new HashMap<String, Object>();
 		_limit.put("start", query.getStart());
 		_limit.put("pageSize",query.getPageSize());
 		params.put("_limit", _limit);
-		
+
 		return params;
 	}
 
@@ -128,5 +128,19 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	@Override
+	public FundConfigDO queryFundConfigLatestByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+
+        FundConfigDO fundConfigDO = null;
+		try {
+            fundConfigDO = (FundConfigDO)sqlMapClient.queryForObject("FundConfigDAO.queryFundConfigLatestByCode", params);
+		} catch (Exception e) {
+			logger.error(code + " queryFundConfigLatestByCode ERROR", e);
+		}
+		return fundConfigDO;
 	}
 }

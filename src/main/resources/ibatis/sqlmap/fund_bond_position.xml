@@ -86,6 +86,15 @@
 			 fund_bond_position 
     	<include refid="SENTENCE_FUND_BOND_POSITION_QUERY"/>
 	</select>
+
+	<!-- 配合分页使用的count语句,共用同一套查询条件  -->
+	<select id="FundBondPositionDAO.maxBondPositionQuarter" resultClass="String" parameterClass="java.util.Map">
+		SELECT
+		max(quarter)
+		FROM
+		fund_bond_position
+		<include refid="SENTENCE_FUND_BOND_POSITION_QUERY"/>
+	</select>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundBondPositionDAO.updateFundBondPosition" parameterClass="com.longxi.data.obj.FundBondPositionDO">

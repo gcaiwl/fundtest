@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.longxi.data.dao.FundTurnoverDAO;
 import com.longxi.data.obj.FundTurnoverDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +88,7 @@ public class FundTurnoverService extends FundService {
         String url = getFundTurnoverUrl(code);
         logger.info(code + " fundTurnover url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -104,10 +104,15 @@ public class FundTurnoverService extends FundService {
                 .replaceAll("PageCount:", "\"PageCount\":");
             JSONObject resultJson = JSONObject.parseObject(result);
             if (null != resultJson) {
+                String year = getCurrentYear();
                 JSONArray dataArray = resultJson.getJSONArray("Data");
                 if (null != dataArray) {
                     for (int i = 0; i < dataArray.size(); i++) {
                         try {
+                            if (!dataArray.getJSONObject(i).getString("REPORTDATE").contains(year) && isUpdateIncr) {
+                                continue;
+                            }
+
                             FundTurnoverDO fundTurnoverDO = new FundTurnoverDO();
                             fundTurnoverDO.setCode(code);
                             fundTurnoverDO.setPublishTime(getDate(dataArray.getJSONObject(i).getString("REPORTDATE")));

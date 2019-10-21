@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.longxi.data.dao.FundValueDAO;
 import com.longxi.data.obj.FundValueDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +90,7 @@ public class FundValueService extends FundService {
         String url = getFundValueUrl(code);
         logger.info(code + " fundValue url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -135,17 +135,23 @@ public class FundValueService extends FundService {
                 }
             }
 
+            long timestamp = getYesterday();
             for (Long k : valueMap.keySet()) {
                 try {
+                    Date dk = new Date(k);
+                    if (dk.getTime() < timestamp && isUpdateIncr) {
+                        continue;
+                    }
+
                     FundValueDO fundValueDO = new FundValueDO();
                     fundValueDO.setCode(code);
                     fundValueDO.setValue(getDouble(valueMap.get(k), 3));
                     fundValueDO.setTotalValue(getDouble(totalMap.get(k), 3));
                     fundValueDO.setIncrease(getDouble(incrMap.get(k), 4));
-                    fundValueDO.setPublishTime(new Date(k));
+                    fundValueDO.setPublishTime(dk);
                     fundValueDOList.add(fundValueDO);
                 } catch (Exception e) {
-                    logger.error(code + "|" + k + "|" + valueMap.get(k) + "|" + totalMap.get(k) + "|"  + incrMap.get(k) + " exception ", e);
+                    logger.error(code + "|" + k + "|" + valueMap.get(k) + "|" + totalMap.get(k) + "|" + incrMap.get(k) + " exception ", e);
                 }
             }
         } catch (Exception e) {

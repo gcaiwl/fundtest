@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.longxi.data.obj.FundHolderDO;
 import com.longxi.data.obj.FundTurnoverDO;
 import com.longxi.data.obj.Query;
 import org.slf4j.Logger;
@@ -128,5 +129,19 @@ public class FundTurnoverDAOImpl extends SqlMapBaseDAO implements FundTurnoverDA
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	@Override
+	public FundTurnoverDO queryFundTurnoverLatestByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+
+		FundTurnoverDO fundTurnoverDO = null;
+		try {
+			fundTurnoverDO = (FundTurnoverDO)sqlMapClient.queryForObject("FundTurnoverDAO.queryFundTurnoverLatestByCode", params);
+		} catch (Exception e) {
+			logger.error(code + " queryFundTurnoverLatestByCode ERROR", e);
+		}
+		return fundTurnoverDO;
 	}
 }

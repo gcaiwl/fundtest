@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.longxi.data.obj.FundConfigDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.longxi.data.obj.Query;
@@ -128,5 +129,22 @@ public class FundIndustryDAOImpl extends SqlMapBaseDAO implements FundIndustryDA
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	@Override
+	public List<FundIndustryDO> queryFundIndustryLatestByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+
+		String quarter = null;
+		try {
+			quarter = (String) sqlMapClient.queryForObject("FundIndustryDAO.maxFundIndustryQuarter", params);
+		} catch (Exception e) {
+			logger.error(code + " maxFundIndustryQuarter error", e);
+		}
+
+		params.put("quarter", quarter);
+		List<FundIndustryDO> list = queryFundIndustry(params);
+		return list;
 	}
 }

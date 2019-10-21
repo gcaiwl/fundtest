@@ -8,7 +8,7 @@ import com.longxi.data.dao.FundBaseDAO;
 import com.longxi.data.dao.impl.FundBaseDAOImpl;
 import com.longxi.data.obj.FundBaseDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -83,7 +83,7 @@ public class FundBaseService extends FundService {
         String url = getFundBaseUrl(code);
         logger.info(code + " fundbase url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -102,7 +102,7 @@ public class FundBaseService extends FundService {
                     fundBase.setIssueTime(getDate(base.get(4).text()));
                     fundBase.setEstablishTime(getDate(base.get(5).text()));
                     fundBase.setScale(getDoubleUnit(base.get(6).text(), 2));
-                    fundBase.setShare(getDoubleUnit(base.get(7).text(), 4));
+                    fundBase.setShare(getDoubleUnit(base.get(7).text(), 2));
                     fundBase.setCompany(getString(base.get(8).text()));
                 } catch (Exception e) {
                     logger.error(code + "|" + base.toString() + " exception ", e);
@@ -119,7 +119,7 @@ public class FundBaseService extends FundService {
                 }
             }
         } catch (Exception e) {
-            logger.error(code  + " getFundBase exception ", e);
+            logger.error(code + " getFundBase exception ", e);
         }
         return fundBase;
     }
@@ -138,6 +138,7 @@ public class FundBaseService extends FundService {
      * 开放申购、暂停赎回 = 10
      * 暂停申购、开放赎回 = 1
      * 暂停申购、暂停赎回 = 0
+     *
      * @param apply
      * @param redeem
      * @return

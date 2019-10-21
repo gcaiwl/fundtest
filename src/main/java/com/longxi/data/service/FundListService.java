@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.longxi.data.dao.FundRecordDAO;
 import com.longxi.data.obj.FundRecordDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class FundListService extends FundService {
 
         // 断点执行
         List<FundRecordDO> fundRecordDOList = fundRecordDAO.queryFundRecordByStatus(1);
-        if (null != fundRecordDOList && !fundRecordDOList.isEmpty()) {
+        if (null != fundRecordDOList && !fundRecordDOList.isEmpty() && !isUpdateForce) {
             for (int i = 0; i < fundRecordDOList.size(); i++) {
                 fundList.add(fundRecordDOList.get(i).getCode());
             }
@@ -44,32 +44,42 @@ public class FundListService extends FundService {
             fundRecordDAO.deleteFundRecord();
 
             // 重新拉取数据
-            Result<String> response = HttpUtils.get(getFundListUrl());
-            if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
-                logger.error("getFundList return is null or empty");
-                return fundList;
-            }
+            fundList = getFundCodeList();
+            fundList.forEach(code -> {
+                FundRecordDO fundRecordDO = new FundRecordDO();
+                fundRecordDO.setCode(code);
+                fundRecordDO.setStatus(1);
+                fundRecordDAO.insertFundRecord(fundRecordDO);
+            });
+        }
+        return fundList;
+    }
 
-            try {
-                String funds = response.getValue().replaceFirst("var r = ", "").replaceAll(";", "").trim();
-                JSONArray fundArray = JSONArray.parseArray(funds);
-                for (int i = 0; i < fundArray.size(); i++) {
-                    // 后端基金过滤掉
-                    if (fundArray.getJSONArray(i).getString(2).contains("(后端)")) {
-                        continue;
-                    }
+    /**
+     * @return
+     */
+    public List<String> getFundCodeList() {
+        List<String> fundList = new ArrayList<String>();
+        Result<String> response = HttpUtil.get(getFundListUrl());
+        if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
+            logger.error("getFundList return is null or empty");
+            return fundList;
+        }
 
-                    String code = fundArray.getJSONArray(i).getString(0);
-                    fundList.add(code);
-
-                    FundRecordDO fundRecordDO = new FundRecordDO();
-                    fundRecordDO.setCode(code);
-                    fundRecordDO.setStatus(1);
-                    fundRecordDAO.insertFundRecord(fundRecordDO);
+        try {
+            String funds = response.getValue().replaceFirst("var r = ", "").replaceAll(";", "").trim();
+            JSONArray fundArray = JSONArray.parseArray(funds);
+            for (int i = 0; i < fundArray.size(); i++) {
+                // 后端基金过滤掉
+                if (fundArray.getJSONArray(i).getString(2).contains("(后端)")) {
+                    continue;
                 }
-            } catch (Exception e) {
-                logger.error("getFundList exception ", e);
+
+                String code = fundArray.getJSONArray(i).getString(0);
+                fundList.add(code);
             }
+        } catch (Exception e) {
+            logger.error("getFundList exception ", e);
         }
         return fundList;
     }

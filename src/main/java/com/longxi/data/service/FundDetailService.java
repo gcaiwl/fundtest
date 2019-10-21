@@ -3,9 +3,12 @@ package com.longxi.data.service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 
+import com.longxi.data.utils.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,9 +44,6 @@ public class FundDetailService {
     @Resource
     private FundValueService fundValueService;
 
-    private static int FETCH_EACH_DATA_SLEEP = 10;
-    private static int FETCH_EACH_CODE_SLEEP = 10;
-
     /**
      *
      */
@@ -73,8 +73,6 @@ public class FundDetailService {
         logger.info("enter retry failList size is " + failList.size());
 
         // fetchData fail retry
-        FETCH_EACH_DATA_SLEEP = 100;
-        FETCH_EACH_CODE_SLEEP = 100;
         Iterator<String> iterator = failList.iterator();
         while (iterator.hasNext()) {
             String code = iterator.next();
@@ -103,54 +101,84 @@ public class FundDetailService {
     private boolean fetchData(String code) {
         boolean result = true;
         try {
-            // 更新基础数据
-            result = result && fundBaseService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
+            List<FutureTask<Object>> futureTaskList = new ArrayList<>();
+            futureTaskList.add(fetchFundTask(fundBaseService, code));
+            futureTaskList.add(fetchFundTask(fundValueService, code));
+            futureTaskList.add(fetchFundTask(fundManagerService, code));
+            futureTaskList.add(fetchFundTask(fundFeatureService, code));
+            futureTaskList.add(fetchFundTask(fundSharesPositionService, code));
+            futureTaskList.add(fetchFundTask(fundBondPositionService, code));
+            futureTaskList.add(fetchFundTask(fundConfigService, code));
+            futureTaskList.add(fetchFundTask(fundHolderService, code));
+            futureTaskList.add(fetchFundTask(fundScaleService, code));
+            futureTaskList.add(fetchFundTask(fundTurnoverService, code));
+            futureTaskList.add(fetchFundTask(fundIndustryService, code));
 
-            // 更新净值数据
-            result = result && fundValueService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
+            for (FutureTask<Object> futureTask : futureTaskList) {
+                result = result && (Boolean)futureTask.get();
+            }
 
-            // 更新经纪人数据
-            result = result && fundManagerService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新特征数据
-            result = result && fundFeatureService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新股票持仓数据
-            result = result && fundSharesPositionService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新债券持仓数据
-            result = result && fundBondPositionService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新资产配置数据
-            result = result && fundConfigService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新持有人结构数据
-            result = result && fundHolderService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新规模数据
-            result = result && fundScaleService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新换手率数据
-            result = result && fundTurnoverService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_DATA_SLEEP);
-
-            // 更新行业数据
-            result = result && fundIndustryService.insertOrUpdate(code);
-            Thread.sleep(FETCH_EACH_CODE_SLEEP);
+            int rand = (int)(Math.random() * 500) + 500;
+            Thread.sleep(rand);
         } catch (Exception e) {
             result = false;
             logger.error(code + " fetchData exception ", e);
         }
         return result;
+    }
+
+    /**
+     * @param service
+     * @param code
+     * @return
+     */
+    private FutureTask<Object> fetchFundTask(IFundService service, String code) {
+        FutureTask<Object> futureTask = new FutureTask<Object>(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                boolean result = false;
+                try {
+                    result = service.insertOrUpdate(code);
+                } catch (Exception e) {
+                    logger.error(code + "|" + fetchFundServiceType(service) + " fund task exception ", e);
+                }
+                return result;
+            }
+        });
+        ThreadUtil.submit(futureTask);
+        return futureTask;
+    }
+
+    /**
+     * @param service
+     * @return
+     */
+    private String fetchFundServiceType(IFundService service) {
+        String fundServiceType = "";
+        if (service instanceof FundBaseService) {
+            fundServiceType = "fundBaseService";
+        } else if (service instanceof FundValueService) {
+            fundServiceType = "fundValueService";
+        } else if (service instanceof FundManagerService) {
+            fundServiceType = "fundManagerService";
+        } else if (service instanceof FundFeatureService) {
+            fundServiceType = "fundFeatureService";
+        } else if (service instanceof FundSharesPositionService) {
+            fundServiceType = "fundSharesPositionService";
+        } else if (service instanceof FundBondPositionService) {
+            fundServiceType = "fundBondPositionService";
+        } else if (service instanceof FundConfigService) {
+            fundServiceType = "fundConfigService";
+        } else if (service instanceof FundHolderService) {
+            fundServiceType = "fundHolderService";
+        } else if (service instanceof FundScaleService) {
+            fundServiceType = "fundScaleService";
+        } else if (service instanceof FundTurnoverService) {
+            fundServiceType = "fundTurnoverService";
+        } else if (service instanceof FundIndustryService) {
+            fundServiceType = "fundIndustryService";
+        }
+        return fundServiceType;
     }
 
     public FundBaseService getFundBaseService() {

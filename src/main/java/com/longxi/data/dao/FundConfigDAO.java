@@ -40,7 +40,13 @@ public interface FundConfigDAO {
 
 	/**
 	 * 根据主键查询单条记录
-	 * @param id 主键
+	 * @param code 主键
 	 */
 	public FundConfigDO queryFundConfigByPublishTime(String code, Date publishTime);
+
+	/**
+	 * 根据主键查询单条记录
+	 * @param code 主键
+	 */
+	public FundConfigDO queryFundConfigLatestByCode(String code);
 }

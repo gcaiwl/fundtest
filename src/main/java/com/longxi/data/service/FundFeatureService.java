@@ -17,7 +17,7 @@ import com.longxi.data.obj.FundFeatureDO;
 import com.longxi.data.obj.FundIndexDO;
 import com.longxi.data.obj.FundStyleDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -136,7 +136,6 @@ public class FundFeatureService extends FundService {
     }
 
     /**
-     *
      * @param instance
      * @return
      */
@@ -180,7 +179,7 @@ public class FundFeatureService extends FundService {
         String url = getFundFeatureUrl(code);
         logger.info(code + " fundFeature url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -205,9 +204,9 @@ public class FundFeatureService extends FundService {
                         FundFeatureDO fundFeatureDO = new FundFeatureDO();
                         fundFeatureDO.setCode(code);
                         fundFeatureDO.setFeature(getString(td.get(0).text()));
-                        fundFeatureDO.setYear1(getDouble(td.get(1).text()));
-                        fundFeatureDO.setYear2(getDouble(td.get(2).text()));
-                        fundFeatureDO.setYear3(getDouble(td.get(3).text()));
+                        fundFeatureDO.setYear1(getDoublePercent(td.get(1).text(), 2));
+                        fundFeatureDO.setYear2(getDoublePercent(td.get(2).text(), 2));
+                        fundFeatureDO.setYear3(getDoublePercent(td.get(3).text(), 2));
                         fundFeatureDOList.add(fundFeatureDO);
                     } catch (Exception e) {
                         logger.error("feature|" + code + "|" + tr.get(i).toString() + " exception ", e);
@@ -231,14 +230,20 @@ public class FundFeatureService extends FundService {
                     }
                 }
 
+                String year = getCurrentYear();
                 Elements style = doc.select("table[class='fgtb']");
                 if (null != style) {
                     Elements tr3 = style.select("tbody tr");
                     for (int i = 1; i < tr3.size(); i++) {
                         Elements td = tr3.get(i).select("td");
+                        String qr = getQuarter(td.get(0).text());
+                        if (!qr.contains(year) && isUpdateIncr) {
+                            continue;
+                        }
+
                         FundStyleDO fundStyleDO = new FundStyleDO();
                         fundStyleDO.setCode(code);
-                        fundStyleDO.setQuarter(getQuarter(td.get(0).text()));
+                        fundStyleDO.setQuarter(qr);
                         fundStyleDO.setStyle(getString(td.get(1).text()));
                         fundStyleDOList.add(fundStyleDO);
                     }

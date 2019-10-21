@@ -84,11 +84,20 @@
     
     <!-- 配合分页使用的count语句,共用同一套查询条件  -->
     <select id="FundSharesPositionDAO.countFundSharesPosition" resultClass="int" parameterClass="java.util.Map">
-		SELECT  
+		SELECT
            count(1)
       	FROM
-			 fund_shares_position 
+			 fund_shares_position
     	<include refid="SENTENCE_FUND_SHARES_POSITION_QUERY"/>
+	</select>
+
+	<!-- 配合分页使用的count语句,共用同一套查询条件  -->
+	<select id="FundSharesPositionDAO.maxSharesPositionQuarter" resultClass="String" parameterClass="java.util.Map">
+		SELECT
+		max(quarter)
+		FROM
+		fund_shares_position
+		<include refid="SENTENCE_FUND_SHARES_POSITION_QUERY"/>
 	</select>
 	
 	<!-- 根据主键更新单条记录  -->

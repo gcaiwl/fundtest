@@ -7,14 +7,10 @@ import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
 
-import com.longxi.data.dao.FundBaseDAO;
 import com.longxi.data.dao.FundBondPositionDAO;
-import com.longxi.data.dao.impl.FundBaseDAOImpl;
-import com.longxi.data.obj.FundBaseDO;
 import com.longxi.data.obj.FundBondPositionDO;
-import com.longxi.data.obj.FundSharesPositionDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -94,7 +90,7 @@ public class FundBondPositionService extends FundService {
         String url = getFundBondPositionUrl(code);
         logger.info(code + " fundBondPosition url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -106,13 +102,20 @@ public class FundBondPositionService extends FundService {
                 .replaceAll("content:", "\"content\":")
                 .replaceAll("arryear:", "\"arryear\":")
                 .replaceAll("curyear:", "\"curyear\":");
+
+            String year = getCurrentYear();
             JSONObject resultJson = JSONObject.parseObject(result);
+            if (!resultJson.getString("curyear").contains(year) && isUpdateIncr) {
+                return fundBondPositionDOList;
+            }
+
             Document doc = Jsoup.parse(resultJson.getString("content"));
             if (null != doc) {
                 Elements label = doc.select("h4 label[class='left']");
                 Elements table = doc.select("table[class='w782 comm tzxq']");
                 for (int i = 0; i < table.size(); i++) {
                     String num = label.get(i).text().replaceAll(".*(\\d)季度.*", "$1");
+                    int unit = getUnit(table.get(i).select("th[class='last']").text());
                     Elements tr = table.get(i).select("tbody tr");
                     for (int j = 0; j < tr.size(); j++) {
                         try {
@@ -122,7 +125,7 @@ public class FundBondPositionService extends FundService {
                             fundBondPositionDO.setBondCode(getString(td.get(1).text()));
                             fundBondPositionDO.setBondName(getString(td.get(2).text()));
                             fundBondPositionDO.setAssetsRate(getDoublePercent(td.get(3).text(), 2));
-                            fundBondPositionDO.setMarketValue(getDouble(td.get(4).text(), 2));
+                            fundBondPositionDO.setMarketValue(getDoubleUnit(td.get(4).text(), unit, 2));
                             fundBondPositionDO.setQuarter(resultJson.getString("curyear") + num);
                             fundBondPositionDOList.add(fundBondPositionDO);
                         } catch (Exception e) {
@@ -138,12 +141,11 @@ public class FundBondPositionService extends FundService {
     }
 
     /**
-     *
      * @param code
      * @return
      */
     private String getFundBondPositionUrl(String code) {
-       return String.format(FUND_BOND_POSITION_URL, code);
+        return String.format(FUND_BOND_POSITION_URL, code);
     }
 
     public FundBondPositionDAO getFundBondPositionDAO() {

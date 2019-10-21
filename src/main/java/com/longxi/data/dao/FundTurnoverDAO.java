@@ -40,7 +40,13 @@ public interface FundTurnoverDAO {
 
 	/**
 	 * 根据主键查询单条记录
-	 * @param id 主键
+	 * @param code 主键
 	 */
 	public FundTurnoverDO queryFundTurnoverByPublishTime(String code, Date publishTime);
+
+	/**
+	 * 根据主键查询单条记录
+	 * @param code 主键
+	 */
+	public FundTurnoverDO queryFundTurnoverLatestByCode(String code);
 }

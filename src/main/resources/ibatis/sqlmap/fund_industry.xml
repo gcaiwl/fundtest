@@ -82,6 +82,15 @@
 			 fund_industry 
     	<include refid="SENTENCE_FUND_INDUSTRY_QUERY"/>
 	</select>
+
+	<!-- 配合分页使用的count语句,共用同一套查询条件  -->
+	<select id="FundIndustryDAO.maxFundIndustryQuarter" resultClass="String" parameterClass="java.util.Map">
+		SELECT
+		max(quarter)
+		FROM
+		fund_industry
+		<include refid="SENTENCE_FUND_INDUSTRY_QUERY"/>
+	</select>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundIndustryDAO.updateFundIndustry" parameterClass="com.longxi.data.obj.FundIndustryDO">

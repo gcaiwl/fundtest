@@ -31,4 +31,10 @@
     <bean name="fundTurnoverService" class="com.longxi.data.service.FundTurnoverService"/>
     <bean name="fundValueService" class="com.longxi.data.service.FundValueService"/>
     <bean name="fundDetailService" class="com.longxi.data.service.FundDetailService"/>
+    <bean name="fundBuildService" class="com.longxi.data.service.FundBuildService"/>
+    <bean name="fundGraphService" class="com.longxi.data.service.FundGraphService" init-method="init">
+        <property name="graphUrl" value="bolt://127.0.0.1:7687"/>
+        <property name="graphName" value="neo4j"/>
+        <property name="graphSign" value="neo4j_longxi"/>
+    </bean>
 </beans>

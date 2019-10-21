@@ -42,4 +42,10 @@ public interface FundStyleDAO {
 	 * @param code 主键
 	 */
 	public FundStyleDO queryFundStyleByStyle(String code, String style, String quarter);
+
+	/**
+	 * 根据主键查询单条记录
+	 * @param code 主键
+	 */
+	public FundStyleDO queryFundStyleLatestByCode(String code);
 }

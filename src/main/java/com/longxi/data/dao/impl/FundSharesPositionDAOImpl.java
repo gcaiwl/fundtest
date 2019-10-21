@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.longxi.data.obj.FundBondPositionDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.longxi.data.obj.Query;
@@ -128,5 +129,22 @@ public class FundSharesPositionDAOImpl extends SqlMapBaseDAO implements FundShar
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	@Override
+	public List<FundSharesPositionDO> queryFundSharesPositionLatestByCode(String code) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", code);
+
+		String quarter = null;
+		try {
+			quarter = (String) sqlMapClient.queryForObject("FundSharesPositionDAO.maxSharesPositionQuarter", params);
+		} catch (Exception e) {
+			logger.error(code + " maxSharesPositionQuarter error", e);
+		}
+
+		params.put("quarter", quarter);
+		List<FundSharesPositionDO> list = queryFundSharesPosition(params);
+		return list;
 	}
 }

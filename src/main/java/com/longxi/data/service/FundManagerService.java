@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.longxi.data.dao.FundManagerDAO;
 import com.longxi.data.obj.FundManagerDO;
 import com.longxi.data.obj.Result;
-import com.longxi.data.utils.HttpUtils;
+import com.longxi.data.utils.HttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -90,7 +90,7 @@ public class FundManagerService extends FundService {
         String url = getFundManagerUrl(code);
         logger.info(code + " fundManager url is " + url);
 
-        Result<String> response = HttpUtils.get(url);
+        Result<String> response = HttpUtil.get(url);
         if (!response.isSuccess() || StringUtils.isBlank(response.getValue())) {
             logger.error(url + " status is " + response.getErrCode() + " resposne is " + response.getValue());
             return null;
@@ -100,10 +100,15 @@ public class FundManagerService extends FundService {
         try {
             Document doc = Jsoup.parse(response.getValue());
             if (null != doc) {
+                String year = getCurrentYear();
                 Elements tr = doc.select("table[class='w782 comm  jloff'] tbody tr");
                 for (int i = 0; i < tr.size(); i++) {
                     try {
                         Elements td = tr.get(i).select("td");
+                        if (!td.get(1).text().contains(year) && !td.get(1).text().equals("至今") && isUpdateIncr) {
+                            continue;
+                        }
+
                         FundManagerDO fundManagerDO = new FundManagerDO();
                         fundManagerDO.setCode(code);
                         fundManagerDO.setStartTime(getDate(td.get(0).text()));
