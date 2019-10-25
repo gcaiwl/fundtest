@@ -131,7 +131,6 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundValueByPublishTime return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -147,5 +146,20 @@ public class FundValueDAOImpl extends SqlMapBaseDAO implements FundValueDAO {
 			return String.format(tableName, 0);
 		}
 		return String.format(tableName, Integer.parseInt(code) % 128);
+	}
+
+	@Override
+	public int deleteFundValueByPublishTime(String code, Date publishTime) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("publishTime", publishTime);
+			params.put("tableName", getTableName(code));
+			num = sqlMapClient.update("FundValueDAO.deleteFundValueByPublishTime", params);
+		} catch (Exception e) {
+			logger.error("deleteFundValueByPublishTime error", e);
+		}
+		return num;
 	}
 }

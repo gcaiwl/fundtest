@@ -18,8 +18,7 @@
 	<sql id="SENTENCE_FUND_SCALE">
 		id,gmt_create,gmt_modified,code,purchase,redeem,share,assets,assets_rate,publish_time		
 	</sql>
-	
-	
+
 	<sql id="SENTENCE_FUND_SCALE_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -102,7 +101,11 @@
 			 fund_scale 
     	<include refid="SENTENCE_FUND_SCALE_QUERY"/>
 	</select>
-	
+
+	<delete id="FundScaleDAO.deleteFundScaleByPublishTime" parameterClass="java.lang.Map">
+		DELETE FROM fund_scale WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
+	</delete>
+
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundScaleDAO.updateFundScale" parameterClass="com.longxi.data.obj.FundScaleDO">
 		 UPDATE fund_scale  set gmt_modified=now()

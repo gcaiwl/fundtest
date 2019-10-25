@@ -17,7 +17,6 @@
 		id,gmt_create,gmt_modified,code,manager,start_time,end_time,redound		
 	</sql>
 	
-	
 	<sql id="SENTENCE_FUND_MANAGER_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -83,6 +82,10 @@
 			 fund_manager 
     	<include refid="SENTENCE_FUND_MANAGER_QUERY"/>
 	</select>
+
+	<delete id="FundManagerDAO.deleteFundManagerByManager" parameterClass="java.lang.Map">
+		DELETE FROM fund_manager WHERE code = #code:CHAR# AND manager=#manager:VARCHAR#
+	</delete>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundManagerDAO.updateFundManager" parameterClass="com.longxi.data.obj.FundManagerDO">

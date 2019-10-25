@@ -46,7 +46,6 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 		return list;
 	}
 
-
 	@Override
 	public int updateFundConfig(FundConfigDO instance) {
 		int num = -1;
@@ -124,7 +123,6 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundConfigByPublishTime return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -142,5 +140,19 @@ public class FundConfigDAOImpl extends SqlMapBaseDAO implements FundConfigDAO {
 			logger.error(code + " queryFundConfigLatestByCode ERROR", e);
 		}
 		return fundConfigDO;
+	}
+
+	@Override
+	public int deleteFundConfigByPublishTime(String code, Date publishTime) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("publishTime", publishTime);
+			num = sqlMapClient.update("FundConfigDAO.deleteFundConfigByPublishTime", params);
+		} catch (Exception e) {
+			logger.error("deleteFundConfigByPublishTime error", e);
+		}
+		return num;
 	}
 }

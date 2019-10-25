@@ -49,4 +49,10 @@ public interface FundConfigDAO {
 	 * @param code 主键
 	 */
 	public FundConfigDO queryFundConfigLatestByCode(String code);
+
+	/**
+	 * 根据主键查询单条记录
+	 * @param code 主键
+	 */
+	public int deleteFundConfigByPublishTime(String code, Date publishTime);
 }

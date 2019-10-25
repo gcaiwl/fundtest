@@ -125,7 +125,6 @@ public class FundStyleDAOImpl extends SqlMapBaseDAO implements FundStyleDAO {
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundStyleByStyle return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -143,5 +142,20 @@ public class FundStyleDAOImpl extends SqlMapBaseDAO implements FundStyleDAO {
 			logger.error(code + " queryFundStyleLatestByCode ERROR", e);
 		}
 		return fundStyleDO;
+	}
+
+	@Override
+	public int deleteFundStyleByStyle(String code, String style, String quarter) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("style", style);
+			params.put("quarter", quarter);
+			num = sqlMapClient.update("FundStyleDAO.deleteFundStyleByStyle", params);
+		} catch (Exception e) {
+			logger.error("deleteFundStyleByStyle error", e);
+		}
+		return num;
 	}
 }

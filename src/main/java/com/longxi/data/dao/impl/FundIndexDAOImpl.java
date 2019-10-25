@@ -123,9 +123,22 @@ public class FundIndexDAOImpl extends SqlMapBaseDAO implements FundIndexDAO {
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundIndexByFeature return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
+	}
+
+	@Override
+	public int deleteFundIndexByFeature(String code, String feature) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("feature", feature);
+			num = sqlMapClient.update("FundIndexDAO.deleteFundIndexByFeature", params);
+		} catch (Exception e) {
+			logger.error("deleteFundIndexByFeature error", e);
+		}
+		return num;
 	}
 }

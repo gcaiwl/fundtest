@@ -57,7 +57,13 @@ public class FundHolderService extends FundService {
             return result;
         }
 
-        FundHolderDO fundHolderDO = fundHolderDAO.queryFundHolderByPublishTime(instance.getCode(), instance.getPublishTime());
+        FundHolderDO fundHolderDO = null;
+        try {
+            fundHolderDO = fundHolderDAO.queryFundHolderByPublishTime(instance.getCode(), instance.getPublishTime());
+        } catch (Exception e) {
+            fundHolderDAO.deleteFundHolderByPublishTime(instance.getCode(), instance.getPublishTime());
+        }
+
         if (null != fundHolderDO) {
             instance.setId(fundHolderDO.getId());
             int num = fundHolderDAO.updateFundHolder(instance);

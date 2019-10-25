@@ -42,4 +42,10 @@ public interface FundFeatureDAO {
 	 * @param code 分页查询条件
 	 */
 	public FundFeatureDO queryFundFeatureByFeature(String code, String feature);
+
+	/**
+	 * 根据主键更新单条记录
+	 * @param code
+	 */
+	public int deleteFundFeatureByFeature(String code, String feature);
 }

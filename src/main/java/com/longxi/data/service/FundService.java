@@ -21,7 +21,7 @@ public abstract class FundService implements IFundService {
      *
      */
     protected static boolean isUpdateIncr = false;
-    protected static boolean isUpdateForce = false;
+    protected static boolean isUpdateForce = true;
 
     /**
      * @param time

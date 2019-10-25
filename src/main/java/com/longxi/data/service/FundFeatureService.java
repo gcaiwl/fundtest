@@ -83,8 +83,13 @@ public class FundFeatureService extends FundService {
             return result;
         }
 
-        FundFeatureDO fundFeatureDO = fundFeatureDAO.queryFundFeatureByFeature(instance.getCode(),
-            instance.getFeature());
+        FundFeatureDO fundFeatureDO = null;
+        try {
+            fundFeatureDAO.queryFundFeatureByFeature(instance.getCode(), instance.getFeature());
+        } catch (Exception e) {
+            fundFeatureDAO.deleteFundFeatureByFeature(instance.getCode(), instance.getFeature());
+        }
+
         if (null != fundFeatureDO) {
             instance.setId(fundFeatureDO.getId());
             int num = fundFeatureDAO.updateFundFeature(instance);
@@ -115,7 +120,13 @@ public class FundFeatureService extends FundService {
             return result;
         }
 
-        FundIndexDO fundIndexDO = fundIndexDAO.queryFundIndexByFeature(instance.getCode(), instance.getFeature());
+        FundIndexDO fundIndexDO = null;
+        try {
+            fundIndexDO = fundIndexDAO.queryFundIndexByFeature(instance.getCode(), instance.getFeature());
+        } catch (Exception e) {
+            fundIndexDAO.deleteFundIndexByFeature(instance.getCode(), instance.getFeature());
+        }
+
         if (null != fundIndexDO) {
             instance.setId(fundIndexDO.getId());
             int num = fundIndexDAO.updateFundIndex(instance);
@@ -146,7 +157,13 @@ public class FundFeatureService extends FundService {
             return result;
         }
 
-        FundStyleDO fundStyleDO = fundStyleDAO.queryFundStyleByStyle(instance.getCode(), instance.getStyle(), instance.getQuarter());
+        FundStyleDO fundStyleDO = null;
+        try {
+            fundStyleDAO.queryFundStyleByStyle(instance.getCode(), instance.getStyle(), instance.getQuarter());
+        } catch (Exception e) {
+            fundStyleDAO.deleteFundStyleByStyle(instance.getCode(), instance.getStyle(), instance.getQuarter());
+        }
+
         if (null != fundStyleDO) {
             instance.setId(fundStyleDO.getId());
             int num = fundStyleDAO.updateFundStyle(instance);

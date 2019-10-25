@@ -48,4 +48,10 @@ public interface FundStyleDAO {
 	 * @param code 主键
 	 */
 	public FundStyleDO queryFundStyleLatestByCode(String code);
+
+	/**
+	 * 根据主键更新单条记录
+	 * @param code
+	 */
+	public int deleteFundStyleByStyle(String code, String style, String quarter);
 }

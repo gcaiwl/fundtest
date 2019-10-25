@@ -19,7 +19,6 @@
 		id,gmt_create,gmt_modified,code,shares_code,shares_name,shares_num,assets_rate,market_value,quarter		
 	</sql>
 	
-	
 	<sql id="SENTENCE_FUND_SHARES_POSITION_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -99,7 +98,11 @@
 		fund_shares_position
 		<include refid="SENTENCE_FUND_SHARES_POSITION_QUERY"/>
 	</select>
-	
+
+	<delete id="FundSharesPositionDAO.deleteFundSharesPositionByQuarter" parameterClass="java.lang.Map">
+		DELETE FROM fund_shares_position WHERE code = #code:CHAR# AND quarter=#quarter:CHAR# AND shares_code=#sharesCode:CHAR#
+	</delete>
+
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundSharesPositionDAO.updateFundSharesPosition" parameterClass="com.longxi.data.obj.FundSharesPositionDO">
 		 UPDATE fund_shares_position  set gmt_modified=now() 

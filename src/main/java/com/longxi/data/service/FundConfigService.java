@@ -57,7 +57,13 @@ public class FundConfigService extends FundService {
             return result;
         }
 
-        FundConfigDO fundConfigDO = fundConfigDAO.queryFundConfigByPublishTime(instance.getCode(), instance.getPublishTime());
+        FundConfigDO fundConfigDO = null;
+        try {
+            fundConfigDO = fundConfigDAO.queryFundConfigByPublishTime(instance.getCode(), instance.getPublishTime());
+        } catch (Exception e) {
+            fundConfigDAO.deleteFundConfigByPublishTime(instance.getCode(), instance.getPublishTime());
+        }
+
         if (null != fundConfigDO) {
             instance.setId(fundConfigDO.getId());
             int num = fundConfigDAO.updateFundConfig(instance);

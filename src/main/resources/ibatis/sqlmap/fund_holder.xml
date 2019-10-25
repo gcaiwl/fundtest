@@ -18,7 +18,6 @@
 		id,gmt_create,gmt_modified,code,mechanism_ratio,personal_ratio,inside_ratio,share,publish_time		
 	</sql>
 	
-	
 	<sql id="SENTENCE_FUND_HOLDER_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -98,7 +97,11 @@
 			 fund_holder 
     	<include refid="SENTENCE_FUND_HOLDER_QUERY"/>
 	</select>
-	
+
+	<delete id="FundHolderDAO.deleteFundHolderByPublishTime" parameterClass="java.lang.Map">
+		DELETE FROM fund_holder WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
+	</delete>
+
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundHolderDAO.updateFundHolder" parameterClass="com.longxi.data.obj.FundHolderDO">
 		 UPDATE fund_holder  set gmt_modified=now()

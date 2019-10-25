@@ -57,7 +57,13 @@ public class FundSharesPositionService extends FundService {
             return result;
         }
 
-        FundSharesPositionDO fundSharesPositionDO = fundSharesPositionDAO.queryFundSharesPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getSharesCode());
+        FundSharesPositionDO fundSharesPositionDO = null;
+        try {
+            fundSharesPositionDO = fundSharesPositionDAO.queryFundSharesPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getSharesCode());
+        } catch (Exception e) {
+            fundSharesPositionDAO.deleteFundSharesPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getSharesCode());
+        }
+
         if (null != fundSharesPositionDO) {
             instance.setId(fundSharesPositionDO.getId());
             int num = fundSharesPositionDAO.updateFundSharesPosition(instance);
@@ -153,7 +159,6 @@ public class FundSharesPositionService extends FundService {
     }
 
     /**
-     *
      * @param code
      * @return
      */

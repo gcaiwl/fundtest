@@ -15,7 +15,6 @@
 		id,gmt_create,gmt_modified,code,style,quarter		
 	</sql>
 	
-	
 	<sql id="SENTENCE_FUND_STYLE_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -86,7 +85,11 @@
 			 fund_style 
     	<include refid="SENTENCE_FUND_STYLE_QUERY"/>
 	</select>
-	
+
+	<delete id="FundStyleDAO.deleteFundStyleByStyle" parameterClass="java.lang.Map">
+		DELETE FROM fund_style WHERE code = #code:CHAR# AND style=#style:VARCHAR# AND quarter=#quarter:CHAR#
+	</delete>
+
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundStyleDAO.updateFundStyle" parameterClass="com.longxi.data.obj.FundStyleDO">
 		 UPDATE fund_style  set gmt_modified=now() 

@@ -120,9 +120,19 @@ public class FundBaseDAOImpl extends SqlMapBaseDAO implements FundBaseDAO {
             return null;
         } else if (list.size() != 1) {
             String errMsg = "queryFundBaseByCode return too many records,the param=" + params;
-            logger.error(errMsg);
             throw new RuntimeException(errMsg);
         }
         return list.get(0);
+    }
+
+    @Override
+    public int deleteFundBaseByCode(String code) {
+        int num = -1;
+        try {
+            num = sqlMapClient.update("FundBaseDAO.deleteFundBaseByCode", code);
+        } catch (Exception e) {
+            logger.error("deleteFundBaseByCode error", e);
+        }
+        return num;
     }
 }

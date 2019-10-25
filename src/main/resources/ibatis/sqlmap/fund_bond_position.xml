@@ -95,6 +95,10 @@
 		fund_bond_position
 		<include refid="SENTENCE_FUND_BOND_POSITION_QUERY"/>
 	</select>
+
+	<delete id="FundBondPositionDAO.deleteFundBondPositionByQuarter" parameterClass="java.lang.Map">
+		DELETE FROM fund_bond_position WHERE code = #code:CHAR# AND quarter=#quarter:CHAR# AND bond_code=#bondCode:CHAR#
+	</delete>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundBondPositionDAO.updateFundBondPosition" parameterClass="com.longxi.data.obj.FundBondPositionDO">

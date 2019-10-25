@@ -125,7 +125,6 @@ public class FundScaleDAOImpl extends SqlMapBaseDAO implements FundScaleDAO {
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundScaleByPublishTime return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -143,5 +142,19 @@ public class FundScaleDAOImpl extends SqlMapBaseDAO implements FundScaleDAO {
 			logger.error(code + " queryFundScaleLatestByCode ERROR", e);
 		}
 		return fundScaleDO;
+	}
+
+	@Override
+	public int deleteFundScaleByPublishTime(String code, Date publishTime) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("publishTime", publishTime);
+			num = sqlMapClient.update("FundScaleDAO.deleteFundScaleByPublishTime", params);
+		} catch (Exception e) {
+			logger.error("deleteFundScaleByPublishTime error", e);
+		}
+		return num;
 	}
 }

@@ -17,7 +17,6 @@
 		id,gmt_create,gmt_modified,code,value,total_value,increase,publish_time		
 	</sql>
 	
-	
 	<sql id="SENTENCE_FUND_VALUE_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -82,6 +81,10 @@
 		$tableName$
     	<include refid="SENTENCE_FUND_VALUE_QUERY"/>
 	</select>
+
+	<delete id="FundValueDAO.deleteFundValueByPublishTime" parameterClass="java.lang.Map">
+		DELETE FROM $tableName$ WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
+	</delete>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundValueDAO.updateFundValue" parameterClass="com.longxi.data.obj.FundValueDO">

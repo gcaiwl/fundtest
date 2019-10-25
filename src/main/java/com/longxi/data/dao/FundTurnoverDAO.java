@@ -49,4 +49,10 @@ public interface FundTurnoverDAO {
 	 * @param code 主键
 	 */
 	public FundTurnoverDO queryFundTurnoverLatestByCode(String code);
+
+	/**
+	 * 根据主键查询单条记录
+	 * @param code 主键
+	 */
+	public int deleteFundTurnoverByPublishTime(String code, Date publishTime);
 }

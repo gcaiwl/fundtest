@@ -57,7 +57,13 @@ public class FundBondPositionService extends FundService {
             return result;
         }
 
-        FundBondPositionDO fundBondPositionDO = fundBondPositionDAO.queryFundBondPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getBondCode());
+        FundBondPositionDO fundBondPositionDO = null;
+        try {
+            fundBondPositionDAO.queryFundBondPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getBondCode());
+        } catch (Exception e) {
+            fundBondPositionDAO.deleteFundBondPositionByQuarter(instance.getCode(), instance.getQuarter(), instance.getBondCode());
+        }
+
         if (null != fundBondPositionDO) {
             instance.setId(fundBondPositionDO.getId());
             int num = fundBondPositionDAO.updateFundBondPosition(instance);

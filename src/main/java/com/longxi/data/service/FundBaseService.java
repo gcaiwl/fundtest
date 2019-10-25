@@ -50,7 +50,15 @@ public class FundBaseService extends FundService {
         }
 
         FundBaseDAOImpl fundBaseDAO = new FundBaseDAOImpl();
-        FundBaseDO fundBaseDO = fundBaseDAO.queryFundBaseByCode(instance.getCode());
+        FundBaseDO fundBaseDO = null;
+
+        try {
+            fundBaseDO = fundBaseDAO.queryFundBaseByCode(instance.getCode());
+        } catch (Exception e) {
+            // 查询多条时候自动删除重新更新
+            fundBaseDAO.deleteFundBaseByCode(instance.getCode());
+        }
+
         if (null != fundBaseDO) {
             instance.setId(fundBaseDO.getId());
             int num = fundBaseDAO.updateFundBase(instance);

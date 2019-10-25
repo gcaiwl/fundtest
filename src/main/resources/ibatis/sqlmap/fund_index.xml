@@ -15,8 +15,7 @@
 	<sql id="SENTENCE_FUND_INDEX">
 		id,gmt_create,gmt_modified,code,feature,index_value,avg_value		
 	</sql>
-	
-	
+
 	<sql id="SENTENCE_FUND_INDEX_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -78,6 +77,10 @@
 			 fund_index 
     	<include refid="SENTENCE_FUND_INDEX_QUERY"/>
 	</select>
+
+	<delete id="FundIndexDAO.deleteFundIndexByFeature" parameterClass="java.lang.Map">
+		DELETE FROM fund_index WHERE code = #code:CHAR# AND feature=#feature:VARCHAR#
+	</delete>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundIndexDAO.updateFundIndex" parameterClass="com.longxi.data.obj.FundIndexDO">

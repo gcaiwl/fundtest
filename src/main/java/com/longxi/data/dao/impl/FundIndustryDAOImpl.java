@@ -125,7 +125,6 @@ public class FundIndustryDAOImpl extends SqlMapBaseDAO implements FundIndustryDA
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundIndustryByQuarter return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -146,5 +145,20 @@ public class FundIndustryDAOImpl extends SqlMapBaseDAO implements FundIndustryDA
 		params.put("quarter", quarter);
 		List<FundIndustryDO> list = queryFundIndustry(params);
 		return list;
+	}
+
+	@Override
+	public int deleteFundIndustryByQuarter(String code, String quarter, String industry) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("quarter", quarter);
+			params.put("industry", industry);
+			num = sqlMapClient.update("FundIndustryDAO.deleteFundIndustryByQuarter", params);
+		} catch (Exception e) {
+			logger.error("deleteFundIndustryByQuarter error", e);
+		}
+		return num;
 	}
 }

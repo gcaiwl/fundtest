@@ -125,7 +125,6 @@ public class FundBondPositionDAOImpl extends SqlMapBaseDAO implements FundBondPo
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundBondPositionByQuarter return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -146,5 +145,20 @@ public class FundBondPositionDAOImpl extends SqlMapBaseDAO implements FundBondPo
 		params.put("quarter", quarter);
 		List<FundBondPositionDO> list = queryFundBondPosition(params);
 		return list;
+	}
+
+	@Override
+	public int deleteFundBondPositionByQuarter(String code, String quarter, String bondCode) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("quarter", quarter);
+			params.put("bondCode", bondCode);
+			num = sqlMapClient.update("FundBondPositionDAO.deleteFundBondPositionByQuarter", params);
+		} catch (Exception e) {
+			logger.error("deleteFundBondPositionByQuarter error", e);
+		}
+		return num;
 	}
 }

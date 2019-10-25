@@ -57,7 +57,13 @@ public class FundScaleService extends FundService {
             return result;
         }
 
-        FundScaleDO fundScaleDO = fundScaleDAO.queryFundScaleByPublishTime(instance.getCode(), instance.getPublishTime());
+        FundScaleDO fundScaleDO = null;
+        try {
+            fundScaleDO = fundScaleDAO.queryFundScaleByPublishTime(instance.getCode(), instance.getPublishTime());
+        } catch (Exception e) {
+            fundScaleDAO.deleteFundScaleByPublishTime(instance.getCode(), instance.getPublishTime());
+        }
+
         if (null != fundScaleDO) {
             instance.setId(fundScaleDO.getId());
             int num = fundScaleDAO.updateFundScale(instance);

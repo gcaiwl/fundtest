@@ -123,7 +123,6 @@ public class FundManagerDAOImpl extends SqlMapBaseDAO implements FundManagerDAO 
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundManagerByManager return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -135,5 +134,19 @@ public class FundManagerDAOImpl extends SqlMapBaseDAO implements FundManagerDAO 
 		params.put("code", code);
 		List<FundManagerDO> list = queryFundManager(params);
 		return list;
+	}
+
+	@Override
+	public int deleteFundManagerByManager(String code, String manager) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("manager", manager);
+			num = sqlMapClient.update("FundManagerDAO.deleteFundManagerByManager", params);
+		} catch (Exception e) {
+			logger.error("deleteFundManagerByManager error", e);
+		}
+		return num;
 	}
 }

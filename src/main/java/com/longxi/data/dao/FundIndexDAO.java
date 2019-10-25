@@ -42,4 +42,10 @@ public interface FundIndexDAO {
 	 * @param code 主键
 	 */
 	public FundIndexDO queryFundIndexByFeature(String code, String feature);
+
+	/**
+	 * 根据主键更新单条记录
+	 * @param code
+	 */
+	public int deleteFundIndexByFeature(String code, String feature);
 }

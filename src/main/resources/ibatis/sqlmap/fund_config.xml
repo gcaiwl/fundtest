@@ -18,8 +18,7 @@
 	<sql id="SENTENCE_FUND_CONFIG">
 		id,gmt_create,gmt_modified,code,shares_ratio,cash_ratio,bond_ratio,assets,voucher_ratio,publish_time		
 	</sql>
-	
-	
+
 	<sql id="SENTENCE_FUND_CONFIG_QUERY">
 		<dynamic prepend="WHERE " >
 			<isNotNull prepend="AND " property="id">
@@ -102,6 +101,10 @@
 			 fund_config 
     	<include refid="SENTENCE_FUND_CONFIG_QUERY"/>
 	</select>
+
+	<delete id="FundConfigDAO.deleteFundConfigByPublishTime" parameterClass="java.lang.Map">
+		DELETE FROM fund_config WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
+	</delete>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundConfigDAO.updateFundConfig" parameterClass="com.longxi.data.obj.FundConfigDO">

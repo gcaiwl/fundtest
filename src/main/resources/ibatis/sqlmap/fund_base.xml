@@ -106,6 +106,10 @@
 			 fund_base 
     	<include refid="SENTENCE_FUND_BASE_QUERY"/>
 	</select>
+
+	<delete id="FundBaseDAO.deleteFundBaseByCode" parameterClass="java.lang.String">
+		DELETE FROM fund_base WHERE code = #code:CHAR#
+	</delete>
 	
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundBaseDAO.updateFundBase" parameterClass="com.longxi.data.obj.FundBaseDO">

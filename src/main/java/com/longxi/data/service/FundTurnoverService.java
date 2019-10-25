@@ -55,7 +55,13 @@ public class FundTurnoverService extends FundService {
             return result;
         }
 
-        FundTurnoverDO fundTurnoverDO = fundTurnoverDAO.queryFundTurnoverByPublishTime(instance.getCode(), instance.getPublishTime());
+        FundTurnoverDO fundTurnoverDO = null;
+        try {
+            fundTurnoverDO = fundTurnoverDAO.queryFundTurnoverByPublishTime(instance.getCode(), instance.getPublishTime());
+        } catch (Exception e) {
+            fundTurnoverDAO.deleteFundTurnoverByPublishTime(instance.getCode(), instance.getPublishTime());
+        }
+
         if (null != fundTurnoverDO) {
             instance.setId(fundTurnoverDO.getId());
             int num = fundTurnoverDAO.updateFundTurnover(instance);
@@ -119,7 +125,7 @@ public class FundTurnoverService extends FundService {
                             fundTurnoverDO.setTurnRate(getDoublePercent(dataArray.getJSONObject(i).getString("STOCKTURNOVER"), 2));
                             fundTurnoverDOList.add(fundTurnoverDO);
                         } catch (Exception e) {
-                            logger.error(code  + "|" + dataArray.getJSONObject(i).toJSONString()+ " exception ", e);
+                            logger.error(code + "|" + dataArray.getJSONObject(i).toJSONString() + " exception ", e);
                         }
                     }
                 }

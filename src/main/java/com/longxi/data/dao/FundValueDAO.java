@@ -43,4 +43,10 @@ public interface FundValueDAO {
 	 * @param code 主键
 	 */
 	public FundValueDO queryFundValueByPublishTime(String code, Date publishTime);
+
+	/**
+	 * 根据主键查询单条记录
+	 * @param code 主键
+	 */
+	public int deleteFundValueByPublishTime(String code, Date publishTime);
 }

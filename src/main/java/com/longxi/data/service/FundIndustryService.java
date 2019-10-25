@@ -57,7 +57,13 @@ public class FundIndustryService extends FundService {
             return result;
         }
 
-        FundIndustryDO fundIndustryDO = fundIndustryDAO.queryFundIndustryByQuarter(instance.getCode(), instance.getQuarter(), instance.getIndustry());
+        FundIndustryDO fundIndustryDO = null;
+        try {
+            fundIndustryDO = fundIndustryDAO.queryFundIndustryByQuarter(instance.getCode(), instance.getQuarter(), instance.getIndustry());
+        } catch (Exception e) {
+            fundIndustryDAO.deleteFundIndustryByQuarter(instance.getCode(), instance.getQuarter(), instance.getIndustry());
+        }
+
         if (null != fundIndustryDO) {
             instance.setId(fundIndustryDO.getId());
             int num = fundIndustryDAO.updateFundIndustry(instance);

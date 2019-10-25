@@ -125,7 +125,6 @@ public class FundTurnoverDAOImpl extends SqlMapBaseDAO implements FundTurnoverDA
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundTurnoverByPublishTime return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -143,5 +142,19 @@ public class FundTurnoverDAOImpl extends SqlMapBaseDAO implements FundTurnoverDA
 			logger.error(code + " queryFundTurnoverLatestByCode ERROR", e);
 		}
 		return fundTurnoverDO;
+	}
+
+	@Override
+	public int deleteFundTurnoverByPublishTime(String code, Date publishTime) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("publishTime", publishTime);
+			num = sqlMapClient.update("FundTurnoverDAO.deleteFundTurnoverByPublishTime", params);
+		} catch (Exception e) {
+			logger.error("deleteFundTurnoverByPublishTime error", e);
+		}
+		return num;
 	}
 }

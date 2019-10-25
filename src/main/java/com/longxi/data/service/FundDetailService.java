@@ -118,7 +118,7 @@ public class FundDetailService {
                 result = result && (Boolean)futureTask.get();
             }
 
-            int rand = (int)(Math.random() * 500) + 500;
+            int rand = (int)(Math.random() * 200) + 100;
             Thread.sleep(rand);
         } catch (Exception e) {
             result = false;

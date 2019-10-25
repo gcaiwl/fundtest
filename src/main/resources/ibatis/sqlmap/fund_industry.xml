@@ -91,7 +91,11 @@
 		fund_industry
 		<include refid="SENTENCE_FUND_INDUSTRY_QUERY"/>
 	</select>
-	
+
+	<delete id="FundIndustryDAO.deleteFundIndustryByQuarter" parameterClass="java.lang.Map">
+		DELETE FROM fund_industry WHERE code = #code:CHAR# AND quarter=#quarter:CHAR# AND industry=#industry:VARCHAR#
+	</delete>
+
 	<!-- 根据主键更新单条记录  -->
 	<update id="FundIndustryDAO.updateFundIndustry" parameterClass="com.longxi.data.obj.FundIndustryDO">
 		 UPDATE fund_industry  set gmt_modified=now() 

@@ -48,4 +48,10 @@ public interface FundSharesPositionDAO {
 	 * @param code 主键
 	 */
 	public List<FundSharesPositionDO> queryFundSharesPositionLatestByCode(String code);
+
+	/**
+	 * 根据主键查询单条记录
+	 * @param code 主键
+	 */
+	public int deleteFundSharesPositionByQuarter(String code, String quarter, String sharesCode);
 }

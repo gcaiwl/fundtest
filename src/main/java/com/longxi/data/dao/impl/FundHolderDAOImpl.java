@@ -125,7 +125,6 @@ public class FundHolderDAOImpl extends SqlMapBaseDAO implements FundHolderDAO {
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundHolderByPublishTime return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -143,5 +142,19 @@ public class FundHolderDAOImpl extends SqlMapBaseDAO implements FundHolderDAO {
 			logger.error(code + " queryFundHolderLatestByCode ERROR", e);
 		}
 		return fundHolderDO;
+	}
+
+	@Override
+	public int deleteFundHolderByPublishTime(String code, Date publishTime) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("publishTime", publishTime);
+			num = sqlMapClient.update("FundHolderDAO.deleteFundHolderByPublishTime", params);
+		} catch (Exception e) {
+			logger.error("deleteFundHolderByPublishTime error", e);
+		}
+		return num;
 	}
 }

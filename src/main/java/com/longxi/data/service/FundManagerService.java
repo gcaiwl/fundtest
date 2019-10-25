@@ -57,7 +57,13 @@ public class FundManagerService extends FundService {
             return result;
         }
 
-        FundManagerDO fundManagerDO = fundManagerDAO.queryFundManagerByManager(instance.getCode(), instance.getManager());
+        FundManagerDO fundManagerDO = null;
+        try {
+            fundManagerDO = fundManagerDAO.queryFundManagerByManager(instance.getCode(), instance.getManager());
+        } catch (Exception e) {
+            fundManagerDAO.deleteFundManagerByManager(instance.getCode(), instance.getManager());
+        }
+
         if (null != fundManagerDO) {
             instance.setId(fundManagerDO.getId());
             int num = fundManagerDAO.updateFundManager(instance);

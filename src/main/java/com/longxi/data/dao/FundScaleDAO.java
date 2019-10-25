@@ -49,4 +49,10 @@ public interface FundScaleDAO {
 	 * @param code 分页查询条件
 	 */
 	public FundScaleDO queryFundScaleLatestByCode(String code);
+
+	/**
+	 * 根据自定义条件统计总记录条数，配合分页查询使用
+	 * @param code 分页查询条件
+	 */
+	public int deleteFundScaleByPublishTime(String code, Date publishTime);
 }

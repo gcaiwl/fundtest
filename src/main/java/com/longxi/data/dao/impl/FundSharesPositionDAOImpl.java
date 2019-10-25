@@ -125,7 +125,6 @@ public class FundSharesPositionDAOImpl extends SqlMapBaseDAO implements FundShar
 			return null;
 		}else if(list.size() != 1){
 			String errMsg = "queryFundSharesPositionByQuarter return too many records,the param="+params;
-			logger.error(errMsg);
 			throw new RuntimeException(errMsg);
 		}
 		return list.get(0);
@@ -146,5 +145,20 @@ public class FundSharesPositionDAOImpl extends SqlMapBaseDAO implements FundShar
 		params.put("quarter", quarter);
 		List<FundSharesPositionDO> list = queryFundSharesPosition(params);
 		return list;
+	}
+
+	@Override
+	public int deleteFundSharesPositionByQuarter(String code, String quarter, String sharesCode) {
+		int num = -1;
+		try {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("code", code);
+			params.put("quarter", quarter);
+			params.put("sharesCode", sharesCode);
+			num = sqlMapClient.update("FundSharesPositionDAO.deleteFundSharesPositionByQuarter", params);
+		} catch (Exception e) {
+			logger.error("deleteFundSharesPositionByQuarter error", e);
+		}
+		return num;
 	}
 }
