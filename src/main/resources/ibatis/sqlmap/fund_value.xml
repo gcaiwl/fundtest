@@ -82,7 +82,7 @@
     	<include refid="SENTENCE_FUND_VALUE_QUERY"/>
 	</select>
 
-	<delete id="FundValueDAO.deleteFundValueByPublishTime" parameterClass="java.lang.Map">
+	<delete id="FundValueDAO.deleteFundValueByPublishTime" parameterClass="java.util.Map">
 		DELETE FROM $tableName$ WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
 	</delete>
 	

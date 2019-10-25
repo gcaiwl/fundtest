@@ -86,7 +86,7 @@
     	<include refid="SENTENCE_FUND_STYLE_QUERY"/>
 	</select>
 
-	<delete id="FundStyleDAO.deleteFundStyleByStyle" parameterClass="java.lang.Map">
+	<delete id="FundStyleDAO.deleteFundStyleByStyle" parameterClass="java.util.Map">
 		DELETE FROM fund_style WHERE code = #code:CHAR# AND style=#style:VARCHAR# AND quarter=#quarter:CHAR#
 	</delete>
 

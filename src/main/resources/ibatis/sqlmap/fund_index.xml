@@ -78,7 +78,7 @@
     	<include refid="SENTENCE_FUND_INDEX_QUERY"/>
 	</select>
 
-	<delete id="FundIndexDAO.deleteFundIndexByFeature" parameterClass="java.lang.Map">
+	<delete id="FundIndexDAO.deleteFundIndexByFeature" parameterClass="java.util.Map">
 		DELETE FROM fund_index WHERE code = #code:CHAR# AND feature=#feature:VARCHAR#
 	</delete>
 	

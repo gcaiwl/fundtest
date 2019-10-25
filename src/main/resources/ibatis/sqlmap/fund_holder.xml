@@ -98,7 +98,7 @@
     	<include refid="SENTENCE_FUND_HOLDER_QUERY"/>
 	</select>
 
-	<delete id="FundHolderDAO.deleteFundHolderByPublishTime" parameterClass="java.lang.Map">
+	<delete id="FundHolderDAO.deleteFundHolderByPublishTime" parameterClass="java.util.Map">
 		DELETE FROM fund_holder WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
 	</delete>
 

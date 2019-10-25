@@ -99,7 +99,7 @@
 		<include refid="SENTENCE_FUND_SHARES_POSITION_QUERY"/>
 	</select>
 
-	<delete id="FundSharesPositionDAO.deleteFundSharesPositionByQuarter" parameterClass="java.lang.Map">
+	<delete id="FundSharesPositionDAO.deleteFundSharesPositionByQuarter" parameterClass="java.util.Map">
 		DELETE FROM fund_shares_position WHERE code = #code:CHAR# AND quarter=#quarter:CHAR# AND shares_code=#sharesCode:CHAR#
 	</delete>
 

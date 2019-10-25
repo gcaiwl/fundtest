@@ -96,7 +96,7 @@
 		<include refid="SENTENCE_FUND_BOND_POSITION_QUERY"/>
 	</select>
 
-	<delete id="FundBondPositionDAO.deleteFundBondPositionByQuarter" parameterClass="java.lang.Map">
+	<delete id="FundBondPositionDAO.deleteFundBondPositionByQuarter" parameterClass="java.util.Map">
 		DELETE FROM fund_bond_position WHERE code = #code:CHAR# AND quarter=#quarter:CHAR# AND bond_code=#bondCode:CHAR#
 	</delete>
 	

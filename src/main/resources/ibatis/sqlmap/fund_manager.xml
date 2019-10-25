@@ -83,7 +83,7 @@
     	<include refid="SENTENCE_FUND_MANAGER_QUERY"/>
 	</select>
 
-	<delete id="FundManagerDAO.deleteFundManagerByManager" parameterClass="java.lang.Map">
+	<delete id="FundManagerDAO.deleteFundManagerByManager" parameterClass="java.util.Map">
 		DELETE FROM fund_manager WHERE code = #code:CHAR# AND manager=#manager:VARCHAR#
 	</delete>
 	

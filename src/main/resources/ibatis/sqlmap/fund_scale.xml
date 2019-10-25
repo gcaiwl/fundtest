@@ -102,7 +102,7 @@
     	<include refid="SENTENCE_FUND_SCALE_QUERY"/>
 	</select>
 
-	<delete id="FundScaleDAO.deleteFundScaleByPublishTime" parameterClass="java.lang.Map">
+	<delete id="FundScaleDAO.deleteFundScaleByPublishTime" parameterClass="java.util.Map">
 		DELETE FROM fund_scale WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
 	</delete>
 

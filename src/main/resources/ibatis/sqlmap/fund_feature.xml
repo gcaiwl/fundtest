@@ -82,7 +82,7 @@
     	<include refid="SENTENCE_FUND_FEATURE_QUERY"/>
 	</select>
 
-	<delete id="FundFeatureDAO.deleteFundFeatureByFeature" parameterClass="java.lang.Map">
+	<delete id="FundFeatureDAO.deleteFundFeatureByFeature" parameterClass="java.util.Map">
 		DELETE FROM fund_feature WHERE code = #code:CHAR# AND feature=#feature:VARCHAR#
 	</delete>
 	

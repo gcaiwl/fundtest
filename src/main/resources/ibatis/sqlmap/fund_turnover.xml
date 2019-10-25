@@ -86,7 +86,7 @@
     	<include refid="SENTENCE_FUND_TURNOVER_QUERY"/>
 	</select>
 
-	<delete id="FundTurnoverDAO.deleteFundTurnoverByPublishTime" parameterClass="java.lang.Map">
+	<delete id="FundTurnoverDAO.deleteFundTurnoverByPublishTime" parameterClass="java.util.Map">
 		DELETE FROM fund_turnover WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
 	</delete>
 	

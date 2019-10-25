@@ -92,7 +92,7 @@
 		<include refid="SENTENCE_FUND_INDUSTRY_QUERY"/>
 	</select>
 
-	<delete id="FundIndustryDAO.deleteFundIndustryByQuarter" parameterClass="java.lang.Map">
+	<delete id="FundIndustryDAO.deleteFundIndustryByQuarter" parameterClass="java.util.Map">
 		DELETE FROM fund_industry WHERE code = #code:CHAR# AND quarter=#quarter:CHAR# AND industry=#industry:VARCHAR#
 	</delete>
 

@@ -102,7 +102,7 @@
     	<include refid="SENTENCE_FUND_CONFIG_QUERY"/>
 	</select>
 
-	<delete id="FundConfigDAO.deleteFundConfigByPublishTime" parameterClass="java.lang.Map">
+	<delete id="FundConfigDAO.deleteFundConfigByPublishTime" parameterClass="java.util.Map">
 		DELETE FROM fund_config WHERE code = #code:CHAR# AND publish_time=#publishTime:TIMESTAMP#
 	</delete>
 	
