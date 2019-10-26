@@ -23,5 +23,6 @@ public class FundTest {
             return;
         }
         fundDetailService.run();
+        System.exit(0);
     }
 }

@@ -9,6 +9,7 @@ import java.util.concurrent.FutureTask;
 import javax.annotation.Resource;
 
 import com.longxi.data.utils.ThreadUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +84,23 @@ public class FundDetailService {
             }
         }
         logger.info("over retry failList size is " + failList.size());
+    }
+
+    /**
+     * @param code
+     * @return
+     */
+    public boolean run(String code) {
+        if (null == fundListService) {
+            logger.error("fundListService is null");
+            return false;
+        }
+
+        if (StringUtils.isBlank(code)) {
+            logger.error("code is blank");
+            return false;
+        }
+        return fetchData(code);
     }
 
     /**
