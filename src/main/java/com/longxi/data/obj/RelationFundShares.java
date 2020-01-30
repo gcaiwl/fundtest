@@ -10,12 +10,19 @@ import com.longxi.data.annotation.Relation;
 @Relation(type = "hold")
 public class RelationFundShares extends RelationBase {
 
+    /**
+     * 持股数
+     */
     @Property
     private Double sharesNum;
-
+    /**
+     * 占净值比例
+     */
     @Property
     private Double assetsRate;
-
+    /**
+     * 持仓市值
+     */
     @Property
     private Double marketValue;
 

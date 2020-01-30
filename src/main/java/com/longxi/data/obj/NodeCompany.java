@@ -10,6 +10,9 @@ import com.longxi.data.annotation.Property;
 @Node(label = "company")
 public class NodeCompany extends NodeBase {
 
+    /**
+     * 公司
+     */
     @Property
     private String name;
 

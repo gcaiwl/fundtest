@@ -10,9 +10,14 @@ import com.longxi.data.annotation.Relation;
 @Relation(type = "hold")
 public class RelationFundBond extends RelationBase {
 
+    /**
+     * 占净值比例
+     */
     @Property
     private Double assetsRate;
-
+    /**
+     * 持仓市值
+     */
     @Property
     private Double marketValue;
 

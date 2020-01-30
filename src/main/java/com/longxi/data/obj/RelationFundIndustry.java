@@ -10,9 +10,14 @@ import com.longxi.data.annotation.Relation;
 @Relation(type = "invest")
 public class RelationFundIndustry extends RelationBase {
 
+    /**
+     * 占净值比例
+     */
     @Property
     private Double marketRatio;
-
+    /**
+     * 持仓市值
+     */
     @Property
     private Double marketValue;
 

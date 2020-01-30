@@ -12,69 +12,114 @@ import com.longxi.data.annotation.Property;
 @Node(label = "fund")
 public class NodeFund extends NodeBase {
 
+    /**
+     * 基金编码
+     */
     @Property
     private String code;
-
+    /**
+     * 基金名称
+     */
     @Property
     private String name;
-
+    /**
+     * 类型（混合|债券等）
+     */
     @Property
     private String type;
-
+    /**
+     * 创建时间
+     */
     @Property
     private LocalDateTime establishTime;
-
+    /**
+     * 规模
+     */
     @Property
     private Double scale;
-
+    /**
+     * 份额
+     */
     @Property
     private Double share;
-
+    /**
+     * 交易状态
+     */
     @Property
     private Integer status;
-
+    /**
+     * 内部持有占比
+     */
     @Property
     private Double holdInsideRatio;
-
+    /**
+     * 机构持有占比
+     */
     @Property
     private Double holdMechanismRatio;
-
+    /**
+     * 个人持有占比
+     */
     @Property
     private Double holdPersonalRatio;
-
+    /**
+     * 股票占比
+     */
     @Property
     private Double configSharesRatio;
-
+    /**
+     * 现金占比
+     */
     @Property
     private Double configCashRatio;
-
+    /**
+     * 债券占比
+     */
     @Property
     private Double configBondRatio;
-
+    /**
+     * 净资产
+     */
     @Property
     private Double configAssets;
-
+    /**
+     * 存托凭证占净比
+     */
     @Property
     private Double configVoucherRatio;
-
+    /**
+     * 换手率
+     */
     @Property
     private Double turnRate;
-
+    /**
+     * 风格（大盘成长等）
+     */
     @Property
     private String style;
-
+    /**
+     * 期间申购份额
+     */
     @Property
     private Double scalePurchase;
-
+    /**
+     * 期间赎回份额
+     */
     @Property
     private Double scaleRedeem;
-
+    /**
+     * 期末总份额
+     */
     @Property
     private Double scaleShare;
-
+    /**
+     * 期末净资产
+     */
     @Property
     private Double scaleAssets;
-
+    /**
+     * 净资产变动率
+     */
     @Property
     private Double scaleAssetsRate;
 

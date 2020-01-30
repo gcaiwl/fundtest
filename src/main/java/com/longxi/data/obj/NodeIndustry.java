@@ -10,6 +10,9 @@ import com.longxi.data.annotation.Property;
 @Node(label = "industry")
 public class NodeIndustry extends NodeBase {
 
+    /**
+     * 行业
+     */
     @Property
     private String name;
 

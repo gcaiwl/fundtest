@@ -10,9 +10,14 @@ import com.longxi.data.annotation.Property;
 @Node(label = "bond")
 public class NodeBond extends NodeBase {
 
+    /**
+     * 债券编码
+     */
     @Property
     private String bondCode;
-
+    /**
+     * 债券名称
+     */
     @Property
     private String bondName;
 

@@ -10,9 +10,14 @@ import com.longxi.data.annotation.Relation;
 @Relation(type = "manage")
 public class RelationManagerFund extends RelationBase {
 
+    /**
+     * 历史回报
+     */
     @Property
     private Double redound;
-
+    /**
+     * 管理状态
+     */
     @Property
     private Integer status;
 

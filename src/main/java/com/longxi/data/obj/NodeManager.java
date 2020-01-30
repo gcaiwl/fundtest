@@ -10,6 +10,9 @@ import com.longxi.data.annotation.Property;
 @Node(label = "manager")
 public class NodeManager extends NodeBase {
 
+    /**
+     * 经理
+     */
     @Property
     private String name;
 

@@ -10,9 +10,14 @@ import com.longxi.data.annotation.Property;
 @Node(label = "shares")
 public class NodeShares extends NodeBase {
 
+    /**
+     * 股票code
+     */
     @Property
     private String sharesCode;
-
+    /**
+     * 股票名称
+     */
     @Property
     private String sharesName;
 
